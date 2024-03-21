@@ -13,7 +13,7 @@ public:
 	
 	//Con 2 cai nua o day
 
-protected:
+//protected: 
 	SDL_Rect rect_;
 	SDL_Surface *p_object_;
 };

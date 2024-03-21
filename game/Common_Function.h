@@ -6,6 +6,14 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+
+#include <cstdlib>
+#include <ctime>
+
+
+
+
+
 const int SCREEN_WIDTH = 1099;
 const int SCREEN_HEIGHT = 621;
 const int SCREEN_BPP = 32;
@@ -13,7 +21,11 @@ const int SCREEN_BPP = 32;
 static SDL_Surface *g_screen = NULL;
 static SDL_Surface *g_bkground = NULL;
 static SDL_Surface *g_cloud = NULL;
-static SDL_Surface *g_host = NULL;
+static SDL_Surface *g_red_host = NULL; 
+static SDL_Surface *g_green_host = NULL; 
+static SDL_Surface *g_die = NULL; 
+static SDL_Surface *g_win = NULL; 
+
 static SDL_Event g_even;
 
 namespace SDLCommonFunc{

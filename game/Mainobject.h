@@ -15,7 +15,7 @@ public:
 	void HandleInputAction(SDL_Event events);
 	void HandleMove();
 
-private:
+//private:
 	int x_val_;
 	int y_val_;
 
