@@ -10,10 +10,9 @@ public:
 	void Show(SDL_Surface *des);
 	bool LoadImg(const char* file_name);
 	void SetRect(const int& x, const int& y){rect_.x = x; rect_.y = y;}
-	
-	//Con 2 cai nua o day
+	SDL_Rect GetRect() const {return rect_;}
 
-//protected: 
+protected: 
 	SDL_Rect rect_;
 	SDL_Surface *p_object_;
 };

@@ -81,12 +81,14 @@
   <ItemGroup>
     <ClCompile Include="Baseobject.cpp" />
     <ClCompile Include="Common_Function.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Mainobject.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Baseobject.h" />
     <ClInclude Include="Common_Function.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Mainobject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
