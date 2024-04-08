@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 
 
 
@@ -28,6 +29,9 @@ static Mix_Chunk* song2500 = NULL;
 static Mix_Chunk* song3000 = NULL;
 static Mix_Chunk* song4100 = NULL;
 static Mix_Chunk* look_sound = NULL;
+
+static TTF_Font* g_font_text = NULL; 
+
 
 
 

@@ -1,7 +1,7 @@
 ﻿#include "Common_Function.h"
 #include "Mainobject.h"
 #include "Light.h"
-
+#include "Text.h"
 
 bool Init(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
@@ -17,6 +17,11 @@ bool Init(){
 	look_sound = Mix_LoadWAV("look_sound.wav");
 	if (song1600 == NULL || song2000 == NULL || song2500 == NULL || song3000 == NULL || look_sound == NULL) return false;
 
+	//Khởi tạo text
+	if (TTF_Init() == -1) return false;
+	g_font_text = TTF_OpenFont("ZakirahsCasual.TTF", 20); //định dạng font chữ và cỡ chữ
+	if (g_font_text == NULL) return false;
+
 	return true;
 }
 
@@ -30,22 +35,23 @@ int main(int arc, char*argv[]){
 	green_doll = SDLCommonFunc::LoadImage("p.green_doll.png"); if (green_doll == NULL) return 0;
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
 
-
 	MainObject human;
 	human.SetRect(0, 250);
 	//bool ret = human.LoadImg("human01.png");
 	//if (!ret) return 0;
 	
 	Uint32 time_value;
-	Uint32 game_start_time = 2000; //thời gian bắt đầu game là 2000ms sau khi bắt đầu chương trình
+	Uint32 game_start_time = 2000;   //thời gian bắt đầu game là 2000ms sau khi bắt đầu chương trình
 	 
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
 	//bình thường đặt 0 và 0 nhưng khi bấm chạy, thời gian đã tính nhưng mất 1500 ms cho màn hình đen 
-	Uint32 green_light_time; //mili giây
+	Uint32 green_light_time;         //mili giây
+	Uint32 game_duration = 45;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 
-
+	Text time;
+	time.SetColor(Text::RED_TEXT);
 
 	while (!is_quit){
 		while (SDL_PollEvent(&g_even)){
@@ -90,6 +96,14 @@ int main(int arc, char*argv[]){
 
 		human.HandleMove();
 		human.ShowMainObject(g_screen);
+
+		if (time_value/1000-game_start_time/1000 >= 0){
+		std::string time_remaining = std::to_string(game_duration-(time_value/1000-game_start_time/1000));
+		std::string time_heading("Time Remaining: ");
+		time_heading += time_remaining;
+		time.SetText(time_heading);
+		time.CreateGameText(g_font_text, g_screen);
+		}
 
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}
