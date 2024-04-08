@@ -13,10 +13,13 @@ public:
 	~MainObject();
 	void HandleInputAction(SDL_Event events);
 	void HandleMove();
+	void ShowMainObject(SDL_Surface *des);
 
 private:
 	int x_val_;
 	int y_val_;
+	double picture_type;
+
 };
 
 #endif

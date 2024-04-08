@@ -1,19 +1,11 @@
-﻿Build started 07/04/2024 11:55:22 PM.
+﻿Build started 08/04/2024 9:43:33 PM.
      1>Project "C:\Users\Admin\Documents\Visual Studio 2012\Projects\game\game\game.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Baseobject.cpp Common_Function.cpp Light.cpp Mainobject.cpp Source.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Source.cpp
          Source.cpp
-     1>c:\users\admin\documents\visual studio 2012\projects\game\game\source.cpp(56): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\admin\documents\visual studio 2012\projects\game\game\source.cpp(57): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\admin\documents\visual studio 2012\projects\game\game\source.cpp(63): warning C4244: '=' : conversion from 'double' to 'Uint32', possible loss of data
-         Generating Code...
-         Compiling...
-         Mainobject.cpp
-         Light.cpp
-     1>c:\users\admin\documents\visual studio 2012\projects\game\game\light.cpp(5): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-         Common_Function.cpp
-         Baseobject.cpp
-         Generating Code...
+     1>c:\users\admin\documents\visual studio 2012\projects\game\game\source.cpp(61): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\admin\documents\visual studio 2012\projects\game\game\source.cpp(62): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\admin\documents\visual studio 2012\projects\game\game\source.cpp(68): warning C4244: '=' : conversion from 'double' to 'Uint32', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Admin\Documents\Visual Studio 2012\Projects\game\Debug\game.exe" /INCREMENTAL /NOLOGO SDL.lib SDLmain.lib SDL_image.lib SDL_mixer.lib SDL_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Admin\Documents\Visual Studio 2012\Projects\game\Debug\game.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Admin\Documents\Visual Studio 2012\Projects\game\Debug\game.lib" /MACHINE:X86 Debug\Baseobject.obj
          Debug\Common_Function.obj
@@ -25,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:05.47
+Time Elapsed 00:00:01.73

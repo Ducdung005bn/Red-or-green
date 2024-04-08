@@ -15,8 +15,8 @@ bool BaseObject::LoadImg(const char* file_name){
 	if (p_object_ == NULL) return false;
 	return true;
 }
-void BaseObject::Show(SDL_Surface *des){
-	if (p_object_ != NULL){
-		SDLCommonFunc::ApplySurface(p_object_, des, rect_.x, rect_.y);
-	}
-}
+//void BaseObject::Show(SDL_Surface *des){
+//	if (p_object_ != NULL){
+//		SDLCommonFunc::ApplySurface(p_object_, des, rect_.x, rect_.y);
+//	}
+//}

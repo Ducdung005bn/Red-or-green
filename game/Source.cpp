@@ -10,11 +10,12 @@ bool Init(){
 
 	//Khởi tạo audio
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
-	song_1_5 = Mix_LoadWAV("song_1_5.wav");
-	song_2 = Mix_LoadWAV("song_2.wav");
-	song_2_5 = Mix_LoadWAV("song_2_5.wav");
-	song_3 = Mix_LoadWAV("song_3.wav");
-	if (song_1_5 == NULL || song_2 == NULL || song_2_5 == NULL || song_3 == NULL) return false;
+	song1600 = Mix_LoadWAV("song1600.wav");
+	song2000 = Mix_LoadWAV("song2000.wav");
+	song2500 = Mix_LoadWAV("song2500.wav");
+	song3000 = Mix_LoadWAV("song3000.wav");
+	look_sound = Mix_LoadWAV("look_sound.wav");
+	if (song1600 == NULL || song2000 == NULL || song2500 == NULL || song3000 == NULL || look_sound == NULL) return false;
 
 	return true;
 }
@@ -32,15 +33,19 @@ int main(int arc, char*argv[]){
 
 	MainObject human;
 	human.SetRect(0, 250);
-	bool ret = human.LoadImg("p.human.png");
-	if (!ret) return 0;
-
+	//bool ret = human.LoadImg("human01.png");
+	//if (!ret) return 0;
+	
+	Uint32 time_value;
+	Uint32 game_start_time = 2000; //thời gian bắt đầu game là 2000ms sau khi bắt đầu chương trình
+	 
 	bool green_light = true; 
-	Uint32 start_green = 0, start_red = 0;
+	Uint32 start_green = game_start_time, start_red = -1; 
+	//bình thường đặt 0 và 0 nhưng khi bấm chạy, thời gian đã tính nhưng mất 1500 ms cho màn hình đen 
 	Uint32 green_light_time; //mili giây
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 
-	Uint32 time_value; 
+
 
 	while (!is_quit){
 		while (SDL_PollEvent(&g_even)){
@@ -61,27 +66,30 @@ int main(int arc, char*argv[]){
 
 		if (!handle_green_light && time_value >= start_green){ //bắt đầu đèn xanh
 			green_light_time = RandomNumber()*1000;
-			start_red = start_green + green_light_time;     //cài đặt thời gian đèn đỏ tiếp theo
+			start_red = start_green + green_light_time;        //cài đặt thời gian đèn đỏ tiếp theo
 			green_light = true;
+			handle_green_light = true;	
+
 			switch(green_light_time){
-			case 1500: Mix_PlayChannel(-1, song_1_5, 0); break;
-			case 2000: Mix_PlayChannel(-1, song_2, 0); break;
-			case 2500: Mix_PlayChannel(-1, song_2_5, 0); break;
-			case 3000: Mix_PlayChannel(-1, song_3, 0); break;
-			}
-			
-			handle_green_light = true;			
+			case 1600: Mix_PlayChannel(-1, song1600, 0); break;
+			case 2000: Mix_PlayChannel(-1, song2000, 0); break;
+			case 2500: Mix_PlayChannel(-1, song2500, 0); break;
+			case 3000: Mix_PlayChannel(-1, song3000, 0); break;
+			}		
 		}
-		if (time_value >= start_red){                          //bắt đầu đèn đỏ
-			start_green = start_red + 5000;                    //5s sau thì chuyển sang đèn xanh
+		if (handle_green_light && time_value >= start_red){                          //bắt đầu đèn đỏ
+			start_green = start_red + 5500;                    //6s sau thì chuyển sang đèn xanh
 			green_light = false;
 			handle_green_light = false;
+
+			Mix_PlayChannel(-1, look_sound, 0);
 		}
+
 		if (green_light == true)  SDLCommonFunc::ApplySurface(green_doll, g_screen, 1000, 100);
 		if (green_light == false) SDLCommonFunc::ApplySurface(red_doll, g_screen, 1000, 100);
 
 		human.HandleMove();
-        human.Show(g_screen);
+		human.ShowMainObject(g_screen);
 
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}

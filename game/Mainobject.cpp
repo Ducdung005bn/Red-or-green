@@ -1,4 +1,5 @@
 ﻿#include "Mainobject.h"
+#include "Common_Function.h"
 
 MainObject::MainObject(){
 	rect_.x = 0;
@@ -7,6 +8,7 @@ MainObject::MainObject(){
 	rect_.h = HEIGHT_MAIN_OBJECT;
 	x_val_ = 0;
 	y_val_ = 0;
+	picture_type = 1;
 }
 MainObject::~MainObject(){
 	//to do
@@ -35,4 +37,23 @@ void MainObject::HandleMove(){
 	rect_.y += y_val_;
 	if (rect_.y < 175 || rect_.y > 390)
 		rect_.y -= y_val_;
+}
+void MainObject::ShowMainObject(SDL_Surface *des){
+	int animation_speed = 8;
+	if (picture_type == 1)
+	p_object_ = SDLCommonFunc::LoadImage("human01.png"); 
+	else if (picture_type == animation_speed)
+	p_object_ = SDLCommonFunc::LoadImage("human02.png"); 
+	else if (picture_type == animation_speed*2)
+	p_object_ = SDLCommonFunc::LoadImage("human03.png"); 
+	else if (picture_type == animation_speed*3)
+	p_object_ = SDLCommonFunc::LoadImage("human04.png"); 
+	
+	if (x_val_ != 0 || y_val_ != 0){
+		if (picture_type < animation_speed*3)
+			picture_type += 0.5;
+		else if (picture_type == animation_speed*3)
+			picture_type = 1;
+	}
+	SDLCommonFunc::ApplySurface(p_object_, des, rect_.x, rect_.y);
 }

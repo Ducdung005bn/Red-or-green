@@ -10,6 +10,7 @@
 #include <SDL_mixer.h>
 
 
+
 const int SCREEN_WIDTH = 1099;
 const int SCREEN_HEIGHT = 621;
 const int SCREEN_BPP = 32;
@@ -21,10 +22,12 @@ static SDL_Surface *g_cloud = NULL;
 static SDL_Surface *green_doll = NULL;
 static SDL_Surface *red_doll = NULL;
 
-static Mix_Chunk* song_1_5 = NULL;
-static Mix_Chunk* song_2 = NULL;
-static Mix_Chunk* song_2_5 = NULL;
-static Mix_Chunk* song_3 = NULL;
+static Mix_Chunk* song1600 = NULL;
+static Mix_Chunk* song2000 = NULL;
+static Mix_Chunk* song2500 = NULL;
+static Mix_Chunk* song3000 = NULL;
+static Mix_Chunk* song4100 = NULL;
+static Mix_Chunk* look_sound = NULL;
 
 
 
