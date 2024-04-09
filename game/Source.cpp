@@ -41,16 +41,18 @@ int main(int arc, char*argv[]){
 	
 	Uint32 time_value;
 	Uint32 game_start_time = 2000;   //thời gian bắt đầu game là 2000ms sau khi bắt đầu chương trình
-	 
+	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
-	//bình thường đặt 0 và 0 nhưng khi bấm chạy, thời gian đã tính nhưng mất 1500 ms cho màn hình đen 
+	//bình thường đặt 0 và 0 nhưng khi bấm chạy, thời gian đã tính nhưng mất 2000 ms cho màn hình đen 
 	Uint32 green_light_time;         //mili giây
 	Uint32 game_duration = 45;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 
 	Text time;
 	time.SetColor(Text::RED_TEXT);
+
+	GameStatus game_status = PLAYING;
 
 	while (!is_quit){
 		while (SDL_PollEvent(&g_even)){
@@ -82,10 +84,11 @@ int main(int arc, char*argv[]){
 			case 3000: Mix_PlayChannel(-1, song3000, 0); break;
 			}		
 		}
-		if (handle_green_light && time_value >= start_red){                          //bắt đầu đèn đỏ
+		if (handle_green_light && time_value >= start_red){    //bắt đầu đèn đỏ
 			start_green = start_red + 5500;                    //6s sau thì chuyển sang đèn xanh
 			green_light = false;
 			handle_green_light = false;
+			human.SetLastPosition();
 
 			Mix_PlayChannel(-1, look_sound, 0);
 		}
@@ -105,6 +108,17 @@ int main(int arc, char*argv[]){
 		time.SetText(time_heading);
 		time.CreateGameText(g_font_text, g_screen);
 		}
+
+
+
+
+		
+
+
+
+
+
+
 
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}

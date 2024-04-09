@@ -58,4 +58,10 @@ void MainObject::SetPicture(std::string p_link, int p_number){
 	picture_link = p_link;
 	picture_number = p_number;
 }
-
+void MainObject::SetLastPosition(){
+	last_position.x = rect_.x;
+	last_position.y = rect_.y;
+}
+SDL_Rect MainObject::GetLastPosition(){
+	return last_position;
+}
