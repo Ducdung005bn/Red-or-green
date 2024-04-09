@@ -1,11 +1,11 @@
-#ifndef MAIN_OBJECT_H_
+﻿#ifndef MAIN_OBJECT_H_
 #define MAIN_OBJECT_H_
 
 #include "Baseobject.h"
 #include "Common_Function.h"
 
-#define WIDTH_MAIN_OBJECT 60
-#define HEIGHT_MAIN_OBJECT 190
+#define WIDTH_MAIN_OBJECT 75
+#define HEIGHT_MAIN_OBJECT 180
 
 class MainObject : public BaseObject{
 public:
@@ -14,12 +14,14 @@ public:
 	void HandleInputAction(SDL_Event events);
 	void HandleMove();
 	void ShowMainObject(SDL_Surface *des);
+	void SetPicture(std::string picture_link, int picture_number);
 
 private:
 	int x_val_;
 	int y_val_;
 	double picture_type;
-
+	std::string picture_link; //đường dẫn tới tranh
+	int picture_number; //số lượng tranh tạo animation
 };
 
 #endif

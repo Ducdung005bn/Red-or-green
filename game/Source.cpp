@@ -37,8 +37,7 @@ int main(int arc, char*argv[]){
 
 	MainObject human;
 	human.SetRect(0, 250);
-	//bool ret = human.LoadImg("human01.png");
-	//if (!ret) return 0;
+	human.SetPicture("man", 8);
 	
 	Uint32 time_value;
 	Uint32 game_start_time = 2000;   //thời gian bắt đầu game là 2000ms sau khi bắt đầu chương trình
@@ -97,8 +96,10 @@ int main(int arc, char*argv[]){
 		human.HandleMove();
 		human.ShowMainObject(g_screen);
 
-		if (time_value/1000-game_start_time/1000 >= 0){
-		std::string time_remaining = std::to_string(game_duration-(time_value/1000-game_start_time/1000));
+		//hiển thị Time Remaining
+		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
+		if (check_time_remaining >=0 && check_time_remaining <= game_duration){
+		std::string time_remaining = std::to_string(check_time_remaining);
 		std::string time_heading("Time Remaining: ");
 		time_heading += time_remaining;
 		time.SetText(time_heading);

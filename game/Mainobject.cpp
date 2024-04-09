@@ -39,21 +39,23 @@ void MainObject::HandleMove(){
 		rect_.y -= y_val_;
 }
 void MainObject::ShowMainObject(SDL_Surface *des){
-	int animation_speed = 8;
-	if (picture_type == 1)
-	p_object_ = SDLCommonFunc::LoadImage("human01.png"); 
-	else if (picture_type == animation_speed)
-	p_object_ = SDLCommonFunc::LoadImage("human02.png"); 
-	else if (picture_type == animation_speed*2)
-	p_object_ = SDLCommonFunc::LoadImage("human03.png"); 
-	else if (picture_type == animation_speed*3)
-	p_object_ = SDLCommonFunc::LoadImage("human04.png"); 
+	double animation_speed = 0.125;
+
+	for (int i = 1; i <= picture_number; i++){
+		if (picture_type == i)
+			p_object_ = SDLCommonFunc::LoadImage(picture_link + std::to_string((int)picture_type) + ".png"); 
+	}
 	
 	if (x_val_ != 0 || y_val_ != 0){
-		if (picture_type < animation_speed*3)
-			picture_type += 0.5;
-		else if (picture_type == animation_speed*3)
+		if (picture_type < picture_number)
+			picture_type += animation_speed;
+		else if (picture_type == picture_number)
 			picture_type = 1;
 	}
 	SDLCommonFunc::ApplySurface(p_object_, des, rect_.x, rect_.y);
 }
+void MainObject::SetPicture(std::string p_link, int p_number){
+	picture_link = p_link;
+	picture_number = p_number;
+}
+
