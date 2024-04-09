@@ -9,6 +9,8 @@ MainObject::MainObject(){
 	x_val_ = 0;
 	y_val_ = 0;
 	picture_type = 1;
+	last_position.x = 0;
+	last_position.y = 0;
 }
 MainObject::~MainObject(){
 	//to do
