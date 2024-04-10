@@ -1,4 +1,5 @@
 ﻿#include "Common_Function.h"
+#include "Text.h"
 
 SDL_Surface* SDLCommonFunc::LoadImage(std::string file_path){ 
   SDL_Surface *load_image = NULL;
@@ -44,5 +45,45 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font){ //trả chỉ s�
 	text_menu[1].SetColor(Text::BLACK_TEXT);
 	text_menu[1].SetRect(item_position[1].x, item_position[1].y);
 
+	bool selected[menu_item_number] = {0};
 
+	int mouse_x = 0, mouse_y = 0;
+
+	SDL_Event m_event;
+	while(true){
+		SDLCommonFunc::ApplySurface(g_poster, des, 0, 0);
+		for (int i = 0; i < menu_item_number; i++){
+			text_menu[i].CreateGameText(font, des);
+		}
+		while (SDL_PollEvent(&m_event)){
+			switch(m_event.type){
+			case SDL_QUIT: return 1; //1 là exit
+			case SDL_MOUSEMOTION:
+				{
+					mouse_x = m_event.motion.x;
+					mouse_y = m_event.motion.y;
+					
+					for (int i = 0; i < menu_item_number; i++){
+						if (mouse_x >= item_position[i].x
+						 && mouse_y >= item_position[i].y
+						 && mouse_y <= item_position[i].y + item_position[i].h
+						 && mouse_x <= item_position[i].x + item_position[i].w)
+						{
+							//nhấp chuột qua, chưa chọn (màu đen) thành chọn (màu đỏ). Nếu chọn rồi (màu đỏ) thì giữ nguyên
+							if (selected[i] == false) 
+							{
+								selected[i] = 1;
+								text_menu[i].SetColor(Text::RED_TEXT);}
+						}
+						
+					} //kết thúc vòng for
+					break;
+				}
+
+			default: break;
+			} //kết thúc switch
+		} //kết thúc while
+		SDL_Flip(des);
+	}//kết thúc while
+	return 1;
 }

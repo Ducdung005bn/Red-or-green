@@ -54,6 +54,7 @@ int main(int arc, char*argv[]){
 	Text time;
 	time.SetColor(Text::RED_TEXT);
 
+
 	while (!is_quit){
 		time_value = SDL_GetTicks();
 		while (SDL_PollEvent(&g_event)){
