@@ -18,12 +18,10 @@ const int SCREEN_BPP = 32;
 static SDL_Surface *g_screen = NULL;
 static SDL_Surface *g_bkground = NULL;
 static SDL_Surface *g_poster = NULL;
+static SDL_Surface *g_home = NULL;
 static SDL_Surface *g_cloud = NULL;
 static SDL_Surface *green_doll = NULL;
 static SDL_Surface *red_doll = NULL;
-
-static SDL_Surface *you_win = NULL;
-static SDL_Surface *you_lose = NULL;
 
 static Mix_Chunk* song1600 = NULL;
 static Mix_Chunk* song2000 = NULL;
@@ -34,6 +32,7 @@ static Mix_Chunk* look_sound = NULL;
 
 static TTF_Font* g_font_text_1 = NULL; 
 static TTF_Font* g_font_text_2 = NULL;
+static TTF_Font* g_font_text_3 = NULL;
 
 static SDL_Event g_event; //xử lí các sự kiện
 
@@ -41,7 +40,8 @@ namespace SDLCommonFunc{
 	SDL_Surface* LoadImage(std::string file_path);
 	void ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y);
 	void CleanUp();
-	int ShowMenu(SDL_Surface* des, TTF_Font* font);
+	int ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
+	int Home(SDL_Surface* des, TTF_Font* font);
 }
 
 #endif

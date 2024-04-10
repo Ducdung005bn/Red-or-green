@@ -19,10 +19,11 @@ bool Init(){
 
 	//Khởi tạo text
 	if (TTF_Init() == -1) return false;
-	g_font_text_1 = TTF_OpenFont("ZakirahsCasual.TTF", 20); //định dạng font chữ và cỡ chữ
-	g_font_text_2 = TTF_OpenFont("ZakirahsCasual.TTF", 40);
+	g_font_text_1 = TTF_OpenFont("ZakirahsBold.TTF", 20); //định dạng font chữ và cỡ chữ
+	g_font_text_2 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 40);
+	g_font_text_3 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 50);
 
-	if (g_font_text_1 == NULL) return false;
+	if (g_font_text_1 == NULL || g_font_text_2 == NULL || g_font_text_3 == NULL ) return false;
 
 	return true;
 }
@@ -36,18 +37,15 @@ int main(int arc, char*argv[]){
 	double cloud_movement = 0;
 	green_doll = SDLCommonFunc::LoadImage("p.green_doll.png"); if (green_doll == NULL) return 0;
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
-	you_win = SDLCommonFunc::LoadImage("you_win.png"); if (you_win == NULL) return 0;
-	you_lose = SDLCommonFunc::LoadImage("you_lose.png"); if (you_lose == NULL) return 0;
 
     Uint32 time_value;
-	Uint32 game_start_time = 2000;   
+	Uint32 game_start_time = 0;   
 
 	//Menu
-	int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2);
+	int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2, g_font_text_3);
 	if (menu_number == 1) is_quit = true;
 	else if (menu_number == 0) {
 		game_start_time = SDL_GetTicks() + 1000;
-		SDL_FreeSurface(g_poster);
 	}
 
 	MainObject human;
@@ -119,19 +117,22 @@ int main(int arc, char*argv[]){
 		time.CreateGameText(g_font_text_1, g_screen);
 		}
 
-		if (human.GetRect().x < 940 && check_time_remaining < 0){
-			SDLCommonFunc::ApplySurface(you_lose, g_screen, 0,0);
-			is_quit = true;
-		}
-		if (human.GetRect().x >= 940){
-			SDLCommonFunc::ApplySurface(you_win, g_screen, 0,0);
-			is_quit = true;
-		}
+		bool win = false, lose = false;
+		if (human.GetRect().x < 940 && check_time_remaining < 0)
+			lose = true;
+		if (human.GetRect().x >= 940 && check_time_remaining >= 0)
+			win = true;
 		if ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) 
-			&& green_light == false){
-			SDLCommonFunc::ApplySurface(you_lose, g_screen, 0,0);
+			&& green_light == false)
+			lose = true;
+
+		if (win){
+			
+		}
+		if (lose){
 			is_quit = true;
 		}
+		
 
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}
