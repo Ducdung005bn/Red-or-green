@@ -33,15 +33,15 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font){ //trả chỉ s�
 	
 	const int menu_item_number = 2;
 	SDL_Rect item_position[menu_item_number];
-	item_position[0].x = 100; item_position[0].y = 100; item_position[0].w = 100 ;item_position[0].h = 100; 
-	item_position[1].x = 500; item_position[1].y = 100; item_position[1].w = 100 ;item_position[1].h = 100; 
+	item_position[0].x = 120; item_position[0].y = 100; item_position[0].w = 72 ;item_position[0].h = 50; 
+	item_position[1].x = 900; item_position[1].y = 100; item_position[1].w = 80 ;item_position[1].h = 38; 
 
 	Text text_menu[2];
-	text_menu[0].SetText("Play");
+	text_menu[0].SetText("PLAY");
 	text_menu[0].SetColor(Text::BLACK_TEXT);
 	text_menu[0].SetRect(item_position[0].x, item_position[0].y);
 
-	text_menu[1].SetText("Exit");
+	text_menu[1].SetText("EXIT");
 	text_menu[1].SetColor(Text::BLACK_TEXT);
 	text_menu[1].SetRect(item_position[1].x, item_position[1].y);
 
@@ -75,11 +75,33 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font){ //trả chỉ s�
 								selected[i] = 1;
 								text_menu[i].SetColor(Text::RED_TEXT);}
 						}
-						
+						else
+						{
+							//chuột không qua, chưa chọn (màu đen) giữ nguyên. Nếu chọn rồi thì thành chưa chọn (màu đen)
+							if (selected[i] == true)
+							{
+								selected[i] = 0;
+								text_menu[i].SetColor(Text::BLACK_TEXT);}
+						}	 
 					} //kết thúc vòng for
 					break;
 				}
-
+			case SDL_MOUSEBUTTONDOWN:
+				{
+					mouse_x = m_event.button.x;
+					mouse_y = m_event.button.y;
+					for (int i = 0; i < menu_item_number; i++){
+						if (mouse_x >= item_position[i].x
+						 && mouse_y >= item_position[i].y
+						 && mouse_y <= item_position[i].y + item_position[i].h
+						 && mouse_x <= item_position[i].x + item_position[i].w)
+						return i;
+					} 
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return 1;
 			default: break;
 			} //kết thúc switch
 		} //kết thúc while
@@ -87,3 +109,5 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font){ //trả chỉ s�
 	}//kết thúc while
 	return 1;
 }
+
+

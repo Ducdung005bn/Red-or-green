@@ -19,8 +19,10 @@ bool Init(){
 
 	//Khởi tạo text
 	if (TTF_Init() == -1) return false;
-	g_font_text = TTF_OpenFont("ZakirahsCasual.TTF", 20); //định dạng font chữ và cỡ chữ
-	if (g_font_text == NULL) return false;
+	g_font_text_1 = TTF_OpenFont("ZakirahsCasual.TTF", 20); //định dạng font chữ và cỡ chữ
+	g_font_text_2 = TTF_OpenFont("ZakirahsCasual.TTF", 40);
+
+	if (g_font_text_1 == NULL) return false;
 
 	return true;
 }
@@ -37,12 +39,21 @@ int main(int arc, char*argv[]){
 	you_win = SDLCommonFunc::LoadImage("you_win.png"); if (you_win == NULL) return 0;
 	you_lose = SDLCommonFunc::LoadImage("you_lose.png"); if (you_lose == NULL) return 0;
 
+    Uint32 time_value;
+	Uint32 game_start_time = 2000;   
+
+	//Menu
+	int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2);
+	if (menu_number == 1) is_quit = true;
+	else if (menu_number == 0) {
+		game_start_time = SDL_GetTicks() + 1000;
+		SDL_FreeSurface(g_poster);
+	}
+
 	MainObject human;
 	human.SetRect(0, 250);
 	human.SetPicture("man", 8);
 	
-	Uint32 time_value;
-	Uint32 game_start_time = 2000;   //thời gian bắt đầu game là 2000ms sau khi bắt đầu chương trình
 	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
@@ -53,7 +64,6 @@ int main(int arc, char*argv[]){
 
 	Text time;
 	time.SetColor(Text::RED_TEXT);
-
 
 	while (!is_quit){
 		time_value = SDL_GetTicks();
@@ -106,7 +116,7 @@ int main(int arc, char*argv[]){
 		std::string time_heading("Time Remaining: ");
 		time_heading += time_remaining;
 		time.SetText(time_heading);
-		time.CreateGameText(g_font_text, g_screen);
+		time.CreateGameText(g_font_text_1, g_screen);
 		}
 
 		if (human.GetRect().x < 940 && check_time_remaining < 0){

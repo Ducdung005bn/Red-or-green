@@ -32,7 +32,8 @@ static Mix_Chunk* song3000 = NULL;
 static Mix_Chunk* song4100 = NULL;
 static Mix_Chunk* look_sound = NULL;
 
-static TTF_Font* g_font_text = NULL; 
+static TTF_Font* g_font_text_1 = NULL; 
+static TTF_Font* g_font_text_2 = NULL;
 
 static SDL_Event g_event; //xử lí các sự kiện
 
