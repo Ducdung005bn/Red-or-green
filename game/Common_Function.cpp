@@ -69,7 +69,7 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 					
 					for (int i = 0; i < menu_item_number; i++){
 						if (mouse_x >= item_position[i].x
-						 && mouse_y >= item_position[i].y
+					     && mouse_y >= item_position[i].y
 						 && mouse_y <= item_position[i].y + item_position[i].h
 						 && mouse_x <= item_position[i].x + item_position[i].w)
 						{
@@ -144,7 +144,63 @@ int SDLCommonFunc::Home(SDL_Surface* des, TTF_Font* font){
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 
-
+	while(true){
+		SDLCommonFunc::ApplySurface(g_home, des, 0, 0);
+		for (int i = 0; i < home_item_number; i++){
+			text_home[i].CreateGameText(font, des);
+		}
+		while (SDL_PollEvent(&m_event)){
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+					mouse_x = m_event.motion.x;
+					mouse_y = m_event.motion.y;
+					for (int i = 0; i < home_item_number; i++){
+						if (mouse_x >= item_position[i].x
+						 && mouse_y >= item_position[i].y
+						 && mouse_y <= item_position[i].y + item_position[i].h
+						 && mouse_x <= item_position[i].x + item_position[i].w)
+						{
+							if (selected[i] == false)
+							{
+								selected[i] = true;
+								text_home[i].SetColor(Text::RED_TEXT);
+							}
+						}
+						else
+						{
+							if (selected[i] == true)
+							{
+								selected[i] = false;
+								text_home[i].SetColor(Text::BLACK_TEXT);
+							}
+						}
+					}
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+					mouse_x = m_event.button.x;
+					mouse_y = m_event.button.y;
+                        for (int i = 0; i < home_item_number; i++){
+						if (mouse_x >= item_position[i].x
+						 && mouse_y >= item_position[i].y
+						 && mouse_y <= item_position[i].y + item_position[i].h
+						 && mouse_x <= item_position[i].x + item_position[i].w)
+						 return i;
+						}
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+		}
+		SDL_Flip(des);
+	}
+	return -1;
 }
 
 

@@ -39,14 +39,15 @@ int main(int arc, char*argv[]){
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
 
     Uint32 time_value;
-	Uint32 game_start_time = 0;   
+	Uint32 game_start_time = 2000;   
 
 	//Menu
 	int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2, g_font_text_3);
 	if (menu_number == 1) is_quit = true;
-	else if (menu_number == 0) {
-		game_start_time = SDL_GetTicks() + 1000;
-	}
+
+
+
+
 
 	MainObject human;
 	human.SetRect(0, 250);
