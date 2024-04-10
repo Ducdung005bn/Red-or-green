@@ -25,3 +25,24 @@ void SDLCommonFunc::CleanUp(){ //giải phóng vùng nhớ
 	SDL_FreeSurface(g_screen);
 	SDL_FreeSurface(g_bkground);
 }
+
+int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font){ //trả chỉ số chọn item
+	g_poster = LoadImage("poster.png");
+	if (g_poster == NULL) return 1; //1 là exit
+	
+	const int menu_item_number = 2;
+	SDL_Rect item_position[menu_item_number];
+	item_position[0].x = 100; item_position[0].y = 100; item_position[0].w = 100 ;item_position[0].h = 100; 
+	item_position[1].x = 500; item_position[1].y = 100; item_position[1].w = 100 ;item_position[1].h = 100; 
+
+	Text text_menu[2];
+	text_menu[0].SetText("Play");
+	text_menu[0].SetColor(Text::BLACK_TEXT);
+	text_menu[0].SetRect(item_position[0].x, item_position[0].y);
+
+	text_menu[1].SetText("Exit");
+	text_menu[1].SetColor(Text::BLACK_TEXT);
+	text_menu[1].SetRect(item_position[1].x, item_position[1].y);
+
+
+}

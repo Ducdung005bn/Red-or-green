@@ -55,11 +55,12 @@ int main(int arc, char*argv[]){
 	time.SetColor(Text::RED_TEXT);
 
 	while (!is_quit){
-		while (SDL_PollEvent(&g_even)){
-			if (g_even.type == SDL_QUIT){
+		time_value = SDL_GetTicks();
+		while (SDL_PollEvent(&g_event)){
+			if (g_event.type == SDL_QUIT){
 				is_quit = true;
 				break;}
-			human.HandleInputAction(g_even);
+			human.HandleInputAction(g_event);
 		}
 		SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
 
@@ -68,8 +69,6 @@ int main(int arc, char*argv[]){
 		SDLCommonFunc::ApplySurface(g_cloud, g_screen, cloud_movement, 0);
 		SDLCommonFunc::ApplySurface(g_cloud, g_screen, SCREEN_WIDTH + cloud_movement, 0);
 		if (cloud_movement <= -SCREEN_WIDTH) cloud_movement = 0;
-
-		time_value = SDL_GetTicks();
 
 		if (!handle_green_light && time_value >= start_green){ //bắt đầu đèn xanh
 			green_light_time = RandomNumber()*1000;
@@ -108,7 +107,6 @@ int main(int arc, char*argv[]){
 		time.SetText(time_heading);
 		time.CreateGameText(g_font_text, g_screen);
 		}
-
 
 		if (human.GetRect().x < 940 && check_time_remaining < 0){
 			SDLCommonFunc::ApplySurface(you_lose, g_screen, 0,0);
