@@ -29,7 +29,7 @@ bool Init(){
 }
 
 int main(int arc, char*argv[]){
-	bool is_quit = false;
+	
 	if (Init() == false) return 0;
 	
 	g_bkground = SDLCommonFunc::LoadImage("p.background.png"); if (g_bkground == NULL) return 0;
@@ -38,25 +38,52 @@ int main(int arc, char*argv[]){
 	green_doll = SDLCommonFunc::LoadImage("p.green_doll.png"); if (green_doll == NULL) return 0;
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
 
+	bool in_menu = true, through_menu = false;
+	bool in_home = false, in_shop = false, in_game = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
+
+
+	while(in_menu){
+		if (through_menu == false){
+		int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2, g_font_text_3);
+		switch (menu_number){
+		case 0: through_menu = true; in_home = true; break;
+		default: through_menu = false; in_menu = false; break;
+		}//kết thúc switch
+		}//kết thúc if
+
+		if (through_menu == true){
+
+		while(in_home){
+			if (through_home == false){
+			int home_number = SDLCommonFunc::ShowHome(g_screen, g_font_text_2);
+			switch(home_number){
+			case -1: through_home = false; in_home = false; in_menu = false;
+			case 0: through_home = false; in_home = false; in_menu = true; through_menu = false; break;
+			case 1: break;
+			case 2: through_home = true; in_shop = false; in_instructions = false; in_game = true; break;
+			case 3: break;
+			}//kết thúc switch
+			}//kết thúc if
+			if (through_home == true){
+				while(in_shop){
+					//To do
+				}
+				while(in_instructions){
+					//To do
+				}
+				while(in_game){
+//Bắt đầu chơi
+
     Uint32 time_value;
-	Uint32 game_start_time = 2000;   
-
-	//Menu
-	int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2, g_font_text_3);
-	if (menu_number == 1) is_quit = true;
-
-
-
-
+	Uint32 game_start_time = SDL_GetTicks()+1000;   
 
 	MainObject human;
 	human.SetRect(0, 250);
 	human.SetPicture("man", 8);
 	
-	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
-	//bình thường đặt 0 và 0 nhưng khi bấm chạy, thời gian đã tính nhưng mất 2000 ms cho màn hình đen 
+
 	Uint32 green_light_time;         //mili giây
 	Uint32 game_duration = 45;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
@@ -64,11 +91,11 @@ int main(int arc, char*argv[]){
 	Text time;
 	time.SetColor(Text::RED_TEXT);
 
-	while (!is_quit){
+	while (in_game){
 		time_value = SDL_GetTicks();
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT){
-				is_quit = true;
+				in_game = false; through_home = false; in_home = false; in_menu = false;
 				break;}
 			human.HandleInputAction(g_event);
 		}
@@ -128,15 +155,32 @@ int main(int arc, char*argv[]){
 			lose = true;
 
 		if (win){
-			
+			//
 		}
 		if (lose){
-			is_quit = true;
+			//
 		}
 		
-
 		if (SDL_Flip(g_screen) == -1) return 0;
-	}
+	}//kết thúc while(in_game)
+
+
+
+
+
+//Kết thúc chơi
+				}
+			}//kết thúc if (through_home == true)
+
+		}//kết thúc while(in_home)
+
+		}//kết thúc if (through_menu == true)
+	}//kết thúc while(in_menu)
+
+
+
+
+
 	SDLCommonFunc::CleanUp();
 	SDL_Quit();
 	return 0;

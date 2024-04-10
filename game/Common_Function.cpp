@@ -117,23 +117,21 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	}//kết thúc while
 	return 1;
 }
-int SDLCommonFunc::Home(SDL_Surface* des, TTF_Font* font){
+int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font){
 	g_home = LoadImage("home.png");
 	if (g_home == NULL) return -1;
-	const int home_item_number = 5;
+	const int home_item_number = 4;
 	SDL_Rect item_position[home_item_number];
 	item_position[0].x = 20 ; item_position[0].y = 20 ; item_position[0].w = 80 ; item_position[0].h = 80 ;
-	item_position[1].x = 800 ; item_position[1].y = 20; item_position[1].w = 80; item_position[1].h = 80;
-	item_position[2].x = 800 ; item_position[2].y = 300 ; item_position[2].w = 80; item_position[2].h = 80;
-	item_position[3].x = 800; item_position[3].y = 500; item_position[3].w = 80; item_position[3].h = 80;
-	item_position[4].x = 800; item_position[4].y = 700; item_position[4].w = 80; item_position[4].h = 80;
+	item_position[1].x = 800 ; item_position[1].y = 300 ; item_position[1].w = 80; item_position[1].h = 80;
+	item_position[2].x = 800; item_position[2].y = 500; item_position[2].w = 80; item_position[2].h = 80;
+	item_position[3].x = 800; item_position[3].y = 600; item_position[3].w = 80; item_position[3].h = 80;
 
-	Text text_home[5];
+	Text text_home[home_item_number];
 	text_home[0].SetText("Return");
-	text_home[1].SetText("Coin");
-	text_home[2].SetText("Clothing");
-	text_home[3].SetText("Start game");
-	text_home[4].SetText("Instructions");
+	text_home[1].SetText("Shop");
+	text_home[2].SetText("Start game");
+	text_home[3].SetText("Instructions");
 
 	for (int i = 0; i < home_item_number; i++){
 		text_home[i].SetColor(Text::BLACK_TEXT);

@@ -41,7 +41,7 @@ namespace SDLCommonFunc{
 	void ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y);
 	void CleanUp();
 	int ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
-	int Home(SDL_Surface* des, TTF_Font* font);
+	int ShowHome(SDL_Surface* des, TTF_Font* font);
 }
 
 #endif
