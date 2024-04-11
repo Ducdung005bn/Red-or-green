@@ -16,19 +16,20 @@ MainObject::~MainObject(){
 	//to do
 }
 void MainObject::HandleInputAction(SDL_Event events){
+	int speed = 5;
 	if (events.type == SDL_KEYDOWN){    //phím nhấn xuống
 	switch (events.key.keysym.sym){
-	case SDLK_UP:    y_val_ -= 1; break;
-	case SDLK_DOWN:  y_val_ += 1; break;
-	case SDLK_RIGHT: x_val_ += 1; break;
-	case SDLK_LEFT:  x_val_ -= 1; break;}
+	case SDLK_UP:    y_val_ -= speed; break;
+	case SDLK_DOWN:  y_val_ += speed; break;
+	case SDLK_RIGHT: x_val_ += speed; break;
+	case SDLK_LEFT:  x_val_ -= speed; break;}
 	}
 	else if (events.type == SDL_KEYUP){ //phím nhả ra
 	switch (events.key.keysym.sym){
-	case SDLK_UP:    y_val_ += 1; break;
-	case SDLK_DOWN:  y_val_ -= 1; break;
-	case SDLK_RIGHT: x_val_ -= 1; break;
-	case SDLK_LEFT:  x_val_ += 1; break;}
+	case SDLK_UP:    y_val_ += speed; break;
+	case SDLK_DOWN:  y_val_ -= speed; break;
+	case SDLK_RIGHT: x_val_ -= speed; break;
+	case SDLK_LEFT:  x_val_ += speed; break;}
 	}
 }
 void MainObject::HandleMove(){

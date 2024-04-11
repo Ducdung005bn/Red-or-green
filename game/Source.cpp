@@ -160,8 +160,8 @@ int main(int arc, char*argv[]){
 			lose = true;
 
 		if (win){
-			//
-		}
+
+		}//kết thúc if(win)
 		if (lose){
 			//
 		}
