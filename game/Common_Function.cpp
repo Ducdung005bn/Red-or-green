@@ -118,7 +118,7 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	return 1;
 }
 int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
-	g_home = LoadImage("home_all.png");
+	g_home = LoadImage("home.png");
 	if (g_home == NULL) return -1;
 	const int home_item_number = 5;
 	SDL_Rect item_position[home_item_number];
@@ -127,7 +127,6 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	item_position[2].x = 590; item_position[2].y = 129; item_position[2].w = 200; item_position[2].h = 35;
 	item_position[3].x = 590; item_position[3].y = 198; item_position[3].w = 200; item_position[3].h = 30;
 	item_position[4].x = 590; item_position[4].y = 265; item_position[4].w = 200; item_position[4].h = 30;
-
 
 	Text text_home[home_item_number];
 	text_home[0].SetText("Return");
@@ -144,15 +143,29 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 
 
 	bool selected[home_item_number] = {0};
+	int current_home_picture = 0, last_home_picture = 0;
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 
 	while(true){
+		if (current_home_picture != last_home_picture){
+		switch(current_home_picture){
+		case 0: g_home = LoadImage("home.png"); break;
+		case 1: g_home = LoadImage("home1.png"); break;
+		case 2: g_home = LoadImage("home2.png"); break;
+		case 3: g_home = LoadImage("home3.png"); break;
+		case 4: g_home = LoadImage("home4.png"); break;
+		}
+		if (g_home == NULL) return -1;
+		}
+		
 		SDLCommonFunc::ApplySurface(g_home, des, 0, 0);
 		for (int i = 1; i < home_item_number; i++){
 			text_home[i].CreateGameText(font1, des);
 		}
 			text_home[0].CreateGameText(font2, des);
+
+		last_home_picture = current_home_picture;
 
 		while (SDL_PollEvent(&m_event)){
 			switch(m_event.type){
@@ -171,6 +184,7 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 							{
 								selected[i] = true;
 								text_home[i].SetColor(Text::RED_TEXT);
+								if (i != 0) current_home_picture = i;
 							}
 						}
 						else
@@ -179,6 +193,7 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 							{
 								selected[i] = false;
 								text_home[i].SetColor(Text::BLACK_TEXT);
+								if (i != 0) current_home_picture = 0;
 							}
 						}
 					}
@@ -202,6 +217,7 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 					return -1;
 			default: break;
 			}
+
 		}
 		SDL_Flip(des);
 	}
