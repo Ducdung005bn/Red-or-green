@@ -23,6 +23,7 @@ static SDL_Surface *g_cloud = NULL;
 static SDL_Surface *green_doll = NULL;
 static SDL_Surface *red_doll = NULL;
 static SDL_Surface *g_win = NULL;
+static SDL_Surface *g_how = NULL; 
 
 static Mix_Chunk* song1600 = NULL;
 static Mix_Chunk* song2000 = NULL;
@@ -47,7 +48,7 @@ namespace SDLCommonFunc{
 	void CleanUp();
 	int ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
-	int ShowWin(SDL_Surface* des, TTF_Font* font);
+	int ShowWin(int used_time, SDL_Surface* des, TTF_Font* font);
 }
 
 #endif

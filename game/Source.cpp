@@ -42,7 +42,7 @@ int main(int arc, char*argv[]){
 
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
-
+	bool in_game_of_chance = false;
 
 	while(in_menu){
 		if (through_menu == false){
@@ -150,21 +150,31 @@ int main(int arc, char*argv[]){
 		time.CreateGameText(g_font_text_1, g_screen);
 		}
 
-		bool win = false, lose = false;
+		bool win = false, lose = false; int used_time = 0;
 		if (human.GetRect().x < 940 && check_time_remaining < 0)
 			lose = true;
-		if (human.GetRect().x >= 940 && check_time_remaining >= 0)
+		if (human.GetRect().x >= 940 && check_time_remaining >= 0){
 			win = true;
+			 used_time = time_value/1000-game_start_time/1000;
+		}
 		if ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) 
 			&& green_light == false)
 			lose = true;
 
 		if (win){
-
+			SDL_Delay(1000); 
+			int win_number = SDLCommonFunc::ShowWin(used_time, g_screen, g_font_text_4);
+			switch(win_number){
+			case -1: in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
+			case 0: in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+			case 1: break; 
+			}
 		}//kết thúc if(win)
 		if (lose){
 			//
 		}
+
+
 		
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}

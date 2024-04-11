@@ -198,12 +198,14 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	return -1;
 }
 
-int SDLCommonFunc::ShowWin(SDL_Surface* des, TTF_Font* font){
+int SDLCommonFunc::ShowWin(int used_time, SDL_Surface* des, TTF_Font* font){
 
 	//cái HOW? không bấm được. Chuột trong vùng thì hiện.
 
 	g_win = LoadImage("win_picture.png");
-	if (g_win == NULL) return -1;
+	g_how = LoadImage("how_to_play.png");
+
+	if (g_win == NULL || g_how == NULL) return -1;
 	const int win_item_number = 3;
 	SDL_Rect item_position[win_item_number];
 	item_position[0].x = 710 ; item_position[0].y = 138 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
@@ -215,27 +217,37 @@ int SDLCommonFunc::ShowWin(SDL_Surface* des, TTF_Font* font){
 	text_win[1].SetText("Yes");
 	text_win[2].SetText("How?");
 
+	Text text_time;
+	text_time.SetText(std::to_string(used_time));
+	text_time.SetColor(Text::RED_TEXT);
+	text_time.SetRect(520, 272);
 
 	for (int i = 0; i < win_item_number; i++){
-		text_win[i].SetColor(Text::BLACK_TEXT);
+		text_win[i].SetColor(Text::NAVY_TEXT);
 		text_win[i].SetRect(item_position[i].x, item_position[i].y);
 	}
-
-
 
 	bool selected[win_item_number] = {0};
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 
+
 	while(true){
-				
+
 		SDLCommonFunc::ApplySurface(g_win, des, 238, 119);
 
 		for (int i = 0; i < win_item_number; i++){
 			text_win[i].CreateGameText(font, des);
 		}
 
+		text_time.CreateGameText(font, des);
+		
+		if (selected[2] == true)
+		SDLCommonFunc::ApplySurface(g_how, des, 262, 280);
+
+
 		while (SDL_PollEvent(&m_event)){
+
 			switch(m_event.type){
 			case SDL_QUIT: return -1;
 			case SDL_MOUSEMOTION:
@@ -251,7 +263,8 @@ int SDLCommonFunc::ShowWin(SDL_Surface* des, TTF_Font* font){
 							if (selected[i] == false)
 							{
 								selected[i] = true;
-								text_win[i].SetColor(Text::RED_TEXT);
+								text_win[i].SetColor(Text::YELLOW_TEXT);
+
 							}
 						}
 						else
@@ -259,7 +272,9 @@ int SDLCommonFunc::ShowWin(SDL_Surface* des, TTF_Font* font){
 							if (selected[i] == true)
 							{
 								selected[i] = false;
-								text_win[i].SetColor(Text::BLACK_TEXT);
+								text_win[i].SetColor(Text::NAVY_TEXT);
+
+
 							}
 						}
 					}
@@ -269,7 +284,7 @@ int SDLCommonFunc::ShowWin(SDL_Surface* des, TTF_Font* font){
 				{
 					mouse_x = m_event.button.x;
 					mouse_y = m_event.button.y;
-                        for (int i = 0; i < win_item_number-1 ; i++){ //bấm chuột chỉ nhận return và yes. 
+                        for (int i = 0; i < win_item_number-1 ; i++){ //bấm chuột chỉ nhận return (0) và yes (1). 
 						if (mouse_x >= item_position[i].x 
 						 && mouse_y >= item_position[i].y
 						 && mouse_y <= item_position[i].y + item_position[i].h
@@ -283,6 +298,7 @@ int SDLCommonFunc::ShowWin(SDL_Surface* des, TTF_Font* font){
 					return -1;
 			default: break;
 			}
+
 
 		}
 		SDL_Flip(des);

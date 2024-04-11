@@ -11,6 +11,9 @@ public:
 		RED_TEXT = 0,
 		WHITE_TEXT = 1,
 		BLACK_TEXT = 2,
+		GREEN_TEXT = 3,
+		YELLOW_TEXT = 4,
+		NAVY_TEXT = 5,
 	};
 	Text();
 	~Text();
