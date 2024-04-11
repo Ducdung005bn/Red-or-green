@@ -117,26 +117,31 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	}//kết thúc while
 	return 1;
 }
-int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font){
-	g_home = LoadImage("home.png");
+int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+	g_home = LoadImage("home_all.png");
 	if (g_home == NULL) return -1;
-	const int home_item_number = 4;
+	const int home_item_number = 5;
 	SDL_Rect item_position[home_item_number];
-	item_position[0].x = 20 ; item_position[0].y = 20 ; item_position[0].w = 80 ; item_position[0].h = 80 ;
-	item_position[1].x = 800 ; item_position[1].y = 300 ; item_position[1].w = 80; item_position[1].h = 80;
-	item_position[2].x = 800; item_position[2].y = 500; item_position[2].w = 80; item_position[2].h = 80;
-	item_position[3].x = 800; item_position[3].y = 600; item_position[3].w = 80; item_position[3].h = 80;
+	item_position[0].x = 40 ; item_position[0].y = 10 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
+	item_position[1].x = 590 ; item_position[1].y = 59 ; item_position[1].w = 200; item_position[1].h = 35;
+	item_position[2].x = 590; item_position[2].y = 129; item_position[2].w = 200; item_position[2].h = 35;
+	item_position[3].x = 590; item_position[3].y = 198; item_position[3].w = 200; item_position[3].h = 30;
+	item_position[4].x = 590; item_position[4].y = 265; item_position[4].w = 200; item_position[4].h = 30;
+
 
 	Text text_home[home_item_number];
 	text_home[0].SetText("Return");
 	text_home[1].SetText("Shop");
 	text_home[2].SetText("Start game");
 	text_home[3].SetText("Instructions");
+	text_home[4].SetText("Last stand");
 
 	for (int i = 0; i < home_item_number; i++){
 		text_home[i].SetColor(Text::BLACK_TEXT);
 		text_home[i].SetRect(item_position[i].x, item_position[i].y);
 	}
+
+
 
 	bool selected[home_item_number] = {0};
 	int mouse_x = 0, mouse_y = 0;
@@ -144,9 +149,11 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font){
 
 	while(true){
 		SDLCommonFunc::ApplySurface(g_home, des, 0, 0);
-		for (int i = 0; i < home_item_number; i++){
-			text_home[i].CreateGameText(font, des);
+		for (int i = 1; i < home_item_number; i++){
+			text_home[i].CreateGameText(font1, des);
 		}
+			text_home[0].CreateGameText(font2, des);
+
 		while (SDL_PollEvent(&m_event)){
 			switch(m_event.type){
 			case SDL_QUIT: return -1;
@@ -155,8 +162,8 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font){
 					mouse_x = m_event.motion.x;
 					mouse_y = m_event.motion.y;
 					for (int i = 0; i < home_item_number; i++){
-						if (mouse_x >= item_position[i].x
-						 && mouse_y >= item_position[i].y
+						if (mouse_x >= item_position[i].x 
+						 && mouse_y >= item_position[i].y 
 						 && mouse_y <= item_position[i].y + item_position[i].h
 						 && mouse_x <= item_position[i].x + item_position[i].w)
 						{

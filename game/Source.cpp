@@ -22,8 +22,10 @@ bool Init(){
 	g_font_text_1 = TTF_OpenFont("ZakirahsBold.TTF", 20); //định dạng font chữ và cỡ chữ
 	g_font_text_2 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 40);
 	g_font_text_3 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 50);
+	g_font_text_4 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 25);
+	g_font_text_5 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 32);
 
-	if (g_font_text_1 == NULL || g_font_text_2 == NULL || g_font_text_3 == NULL ) return false;
+	if (g_font_text_1 == NULL || g_font_text_2 == NULL || g_font_text_3 == NULL || g_font_text_4 == NULL || g_font_text_5 == NULL ) return false;
 
 	return true;
 }
@@ -39,14 +41,14 @@ int main(int arc, char*argv[]){
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
 
 	bool in_menu = true, through_menu = false;
-	bool in_home = false, in_shop = false, in_game = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
+	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 
 
 	while(in_menu){
 		if (through_menu == false){
 		int menu_number = SDLCommonFunc::ShowMenu(g_screen, g_font_text_2, g_font_text_3);
 		switch (menu_number){
-		case 0: through_menu = true; in_home = true; break;
+		case 0: through_menu = true; in_home = true; through_home = false; break;
 		default: through_menu = false; in_menu = false; break;
 		}//kết thúc switch
 		}//kết thúc if
@@ -55,22 +57,25 @@ int main(int arc, char*argv[]){
 
 		while(in_home){
 			if (through_home == false){
-			int home_number = SDLCommonFunc::ShowHome(g_screen, g_font_text_2);
+			int home_number = SDLCommonFunc::ShowHome(g_screen, g_font_text_5, g_font_text_4);
 			switch(home_number){
-			case -1: through_home = false; in_home = false; in_menu = false;
+			case -1: through_home = false; in_home = false; in_menu = false; break;
 			case 0: through_home = false; in_home = false; in_menu = true; through_menu = false; break;
 			case 1: break;
 			case 2: through_home = true; in_shop = false; in_instructions = false; in_game = true; break;
 			case 3: break;
+			case 4: break;
 			}//kết thúc switch
 			}//kết thúc if
 			if (through_home == true){
 				while(in_shop){
 					//To do
-				}
+				}//Kết thúc while(in_shop)
+
 				while(in_instructions){
 					//To do
-				}
+				}//Kết thúc while(in_instructions)
+
 				while(in_game){
 //Bắt đầu chơi
 
@@ -95,7 +100,7 @@ int main(int arc, char*argv[]){
 		time_value = SDL_GetTicks();
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT){
-				in_game = false; through_home = false; in_home = false; in_menu = false;
+				in_game = false; in_last_stand = false; in_home = false; in_menu = false;
 				break;}
 			human.HandleInputAction(g_event);
 		}
@@ -162,7 +167,7 @@ int main(int arc, char*argv[]){
 		}
 		
 		if (SDL_Flip(g_screen) == -1) return 0;
-	}//kết thúc while(in_game)
+	}
 
 
 
@@ -170,14 +175,16 @@ int main(int arc, char*argv[]){
 
 //Kết thúc chơi
 				}
+				while(in_last_stand){
+					//To do
+				}//kết thúc while(in_last_stand)
+
 			}//kết thúc if (through_home == true)
 
 		}//kết thúc while(in_home)
 
 		}//kết thúc if (through_menu == true)
 	}//kết thúc while(in_menu)
-
-
 
 
 

@@ -33,6 +33,10 @@ static Mix_Chunk* look_sound = NULL;
 static TTF_Font* g_font_text_1 = NULL; 
 static TTF_Font* g_font_text_2 = NULL;
 static TTF_Font* g_font_text_3 = NULL;
+static TTF_Font* g_font_text_4 = NULL;
+static TTF_Font* g_font_text_5 = NULL;
+
+
 
 static SDL_Event g_event; //xử lí các sự kiện
 
@@ -41,7 +45,7 @@ namespace SDLCommonFunc{
 	void ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y);
 	void CleanUp();
 	int ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
-	int ShowHome(SDL_Surface* des, TTF_Font* font);
+	int ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 }
 
 #endif
