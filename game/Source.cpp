@@ -43,6 +43,7 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
+	int total_coins = 0;
 
 	while(in_menu){
 		if (through_menu == false){
@@ -57,7 +58,7 @@ int main(int arc, char*argv[]){
 
 		while(in_home){
 			if (through_home == false){
-			int home_number = SDLCommonFunc::ShowHome(g_screen, g_font_text_5, g_font_text_4);
+			int home_number = SDLCommonFunc::ShowHome(total_coins, g_screen, g_font_text_5, g_font_text_4);
 			switch(home_number){
 			case -1: through_home = false; in_home = false; in_menu = false; break;
 			case 0: through_home = false; in_home = false; in_menu = true; through_menu = false; break;
@@ -95,6 +96,8 @@ int main(int arc, char*argv[]){
 
 	Text time;
 	time.SetColor(Text::RED_TEXT);
+
+	int this_round_coins = 0;
 
 	while (in_game){
 		time_value = SDL_GetTicks();
@@ -155,27 +158,43 @@ int main(int arc, char*argv[]){
 			lose = true;
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0){
 			win = true;
-			 used_time = time_value/1000-game_start_time/1000;
+			used_time = time_value/1000-game_start_time/1000;
+			this_round_coins = 45 - used_time;
 		}
 		if ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) 
 			&& green_light == false)
 			lose = true;
 
-		if (win){
-			SDL_Delay(1000); 
-			int win_number = SDLCommonFunc::ShowWin(used_time, g_screen, g_font_text_4);
+		bool through_win = false;
+		while (win){
+			if (through_win == false){
+				SDL_Delay(1000); 
+			int win_number = SDLCommonFunc::ShowWin(this_round_coins, used_time, g_screen, g_font_text_4);
 			switch(win_number){
-			case -1: in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
-			case 0: in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
-			case 1: break; 
+			case -1: through_win = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
+			case 0: total_coins += this_round_coins; through_win = false; win = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+			case 1: through_win = true; in_game_of_chance = true; break; 
 			}
-		}//kết thúc if(win)
+
+			}//kết thúc if (through_win == false)
+
+
+			if (through_win == true){
+				while(in_game_of_chance){
+					in_game_of_chance = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
+					//Bỏ dòng trên
+				}//kết thúc while(in_game_of_chance)
+
+			}//kết thúc if (through_win == true)
+		}//kết thúc while(win)
 		if (lose){
 			//
 		}
 
 
-		
+
+
+
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}
 

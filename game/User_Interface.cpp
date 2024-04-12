@@ -91,7 +91,7 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	return 1;
 }
 
-int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	g_home = LoadImage("home.png");
 	if (g_home == NULL) return -1;
 	const int home_item_number = 5;
@@ -114,6 +114,10 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 		text_home[i].SetRect(item_position[i].x, item_position[i].y);
 	}
 
+	Text text_coins;
+	text_coins.SetText(std::to_string(total_coins));
+	text_coins.SetColor(Text::YELLOW_TEXT);
+	text_coins.SetRect(950, 35);
 
 
 	bool selected[home_item_number] = {0};
@@ -138,6 +142,8 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 			text_home[i].CreateGameText(font1, des);
 		}
 			text_home[0].CreateGameText(font2, des);
+
+		text_coins.CreateGameText(font1, des);
 
 		last_home_picture = current_home_picture;
 
@@ -198,7 +204,7 @@ int SDLCommonFunc::ShowHome(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	return -1;
 }
 
-int SDLCommonFunc::ShowWin(int used_time, SDL_Surface* des, TTF_Font* font){
+int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des, TTF_Font* font){
 
 	//cái HOW? không bấm được. Chuột trong vùng thì hiện.
 
@@ -208,9 +214,9 @@ int SDLCommonFunc::ShowWin(int used_time, SDL_Surface* des, TTF_Font* font){
 	if (g_win == NULL || g_how == NULL) return -1;
 	const int win_item_number = 3;
 	SDL_Rect item_position[win_item_number];
-	item_position[0].x = 710 ; item_position[0].y = 138 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
-	item_position[1].x = 374 ; item_position[1].y = 445 ; item_position[1].w = 44; item_position[1].h = 30;
-	item_position[2].x = 492; item_position[2].y = 444; item_position[2].w = 70; item_position[2].h = 30;
+	item_position[0].x = 748 ; item_position[0].y = 165 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
+	item_position[1].x = 365 ; item_position[1].y = 435 ; item_position[1].w = 44; item_position[1].h = 30;
+	item_position[2].x = 479; item_position[2].y = 435; item_position[2].w = 70; item_position[2].h = 30;
 
 	Text text_win[win_item_number];
 	text_win[0].SetText("Return");
@@ -220,7 +226,18 @@ int SDLCommonFunc::ShowWin(int used_time, SDL_Surface* des, TTF_Font* font){
 	Text text_time;
 	text_time.SetText(std::to_string(used_time));
 	text_time.SetColor(Text::RED_TEXT);
-	text_time.SetRect(520, 272);
+	text_time.SetRect(513, 194);
+
+	Text text_coins;
+	if (this_round_coins == 0)
+		text_coins.SetText("no  coins");
+	else if (this_round_coins == 1)
+		text_coins.SetText(std::to_string(this_round_coins) + "    coin");
+	else
+	text_coins.SetText(std::to_string(this_round_coins) + "  coins");
+
+	text_coins.SetColor(Text::RED_TEXT);
+	text_coins.SetRect(513, 239);
 
 	for (int i = 0; i < win_item_number; i++){
 		text_win[i].SetColor(Text::NAVY_TEXT);
@@ -234,16 +251,17 @@ int SDLCommonFunc::ShowWin(int used_time, SDL_Surface* des, TTF_Font* font){
 
 	while(true){
 
-		SDLCommonFunc::ApplySurface(g_win, des, 238, 119);
+		SDLCommonFunc::ApplySurface(g_win, des, 233, 119);
 
 		for (int i = 0; i < win_item_number; i++){
 			text_win[i].CreateGameText(font, des);
 		}
 
 		text_time.CreateGameText(font, des);
+		text_coins.CreateGameText(font, des);
 		
 		if (selected[2] == true)
-		SDLCommonFunc::ApplySurface(g_how, des, 262, 280);
+		SDLCommonFunc::ApplySurface(g_how, des, 300, 200);
 
 
 		while (SDL_PollEvent(&m_event)){
