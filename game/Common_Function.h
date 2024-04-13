@@ -23,14 +23,16 @@ static SDL_Surface *g_cloud = NULL;
 static SDL_Surface *green_doll = NULL;
 static SDL_Surface *red_doll = NULL;
 static SDL_Surface *g_win = NULL;
+static SDL_Surface *g_die = NULL; //nhân vật
+static SDL_Surface *g_die_announcement; 
 static SDL_Surface *g_how = NULL; 
 
-static Mix_Chunk* song1600 = NULL;
-static Mix_Chunk* song2000 = NULL;
-static Mix_Chunk* song2500 = NULL;
-static Mix_Chunk* song3000 = NULL;
-static Mix_Chunk* song4100 = NULL;
+static Mix_Chunk* song1 = NULL;
+static Mix_Chunk* song2 = NULL;
+static Mix_Chunk* song3 = NULL;
+static Mix_Chunk* song4 = NULL;
 static Mix_Chunk* look_sound = NULL;
+static Mix_Chunk* shot_sound = NULL;
 
 static TTF_Font* g_font_text_1 = NULL; 
 static TTF_Font* g_font_text_2 = NULL;
@@ -49,6 +51,7 @@ namespace SDLCommonFunc{
 	int ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ShowWin(int this_round_coins, int used_time, SDL_Surface* des, TTF_Font* font);
+	int ShowDie(SDL_Surface* des, TTF_Font* font);
 }
 
 #endif

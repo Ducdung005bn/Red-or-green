@@ -323,3 +323,75 @@ int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des
 	}
 	return -1;
 }
+int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
+	g_die_announcement = SDLCommonFunc::LoadImageW("die_announcement.png");
+	if (g_die_announcement == NULL) return -1;
+	Text text_return;
+	text_return.SetColor(Text::RED_TEXT);
+	text_return.SetText("Return");
+	SDL_Rect return_position; return_position.x = 512; return_position.y = 469; return_position.w = 86; return_position.h = 30;
+	text_return.SetRect(return_position.x, return_position.y);
+	bool selected = 0;
+	int mouse_x = 0, mouse_y = 0;
+	SDL_Event m_event;
+	while(true){
+
+		SDLCommonFunc::ApplySurface(g_die_announcement, des, 320, 90);
+		text_return.CreateGameText(font, des);
+		
+		while (SDL_PollEvent(&m_event)){
+
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+					mouse_x = m_event.motion.x;
+					mouse_y = m_event.motion.y;
+					if (mouse_x >= return_position.x 
+						 && mouse_y >= return_position.y 
+						 && mouse_y <= return_position.y + return_position.h
+						 && mouse_x <= return_position.x + return_position.w)
+						{
+							if (selected == false)
+							{
+								selected = true;
+								text_return.SetColor(Text::NAVY_TEXT);
+							}
+						}
+						else
+						{
+							if (selected == true)
+							{
+								selected = false;
+								text_return.SetColor(Text::RED_TEXT);
+							}
+						}
+					
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+					mouse_x = m_event.button.x;
+					mouse_y = m_event.button.y;
+						if (mouse_x >= return_position.x 
+						 && mouse_y >= return_position.y
+						 && mouse_y <= return_position.y + return_position.h
+						 && mouse_x <= return_position.x + return_position.w)
+						 return 0;
+						
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+
+
+		}
+		SDL_Flip(des);
+	}
+	return -1;
+}
+
+

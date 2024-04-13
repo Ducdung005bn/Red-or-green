@@ -10,12 +10,15 @@ bool Init(){
 
 	//Khởi tạo audio
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
-	song1600 = Mix_LoadWAV("song1600.wav");
-	song2000 = Mix_LoadWAV("song2000.wav");
-	song2500 = Mix_LoadWAV("song2500.wav");
-	song3000 = Mix_LoadWAV("song3000.wav");
+	song1 = Mix_LoadWAV("song1.wav");
+	song2 = Mix_LoadWAV("song2.wav");
+	song3 = Mix_LoadWAV("song3.wav");
+	song4 = Mix_LoadWAV("song4.wav");
 	look_sound = Mix_LoadWAV("look_sound.wav");
-	if (song1600 == NULL || song2000 == NULL || song2500 == NULL || song3000 == NULL || look_sound == NULL) return false;
+	shot_sound = Mix_LoadWAV("pistol-shot.wav");
+	if (song1 == NULL || song2 == NULL || song3 == NULL || song4 == NULL || look_sound == NULL
+		|| shot_sound == NULL) 
+	return false;
 
 	//Khởi tạo text
 	if (TTF_Init() == -1) return false;
@@ -36,7 +39,6 @@ int main(int arc, char*argv[]){
 	
 	g_bkground = SDLCommonFunc::LoadImage("p.background.png"); if (g_bkground == NULL) return 0;
 	g_cloud    = SDLCommonFunc::LoadImage("p.cloud.png"); if (g_cloud == NULL) return 0; 
-	double cloud_movement = 0;
 	green_doll = SDLCommonFunc::LoadImage("p.green_doll.png"); if (green_doll == NULL) return 0;
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
 
@@ -81,26 +83,26 @@ int main(int arc, char*argv[]){
 //Bắt đầu chơi
 
     Uint32 time_value;
-	Uint32 game_start_time = SDL_GetTicks()+1000;   
+	Uint32 game_start_time = SDL_GetTicks()+500;   
 
+	std::string clothes_type = "man";
+	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
+	
 	MainObject human;
 	human.SetRect(0, 250);
-	human.SetPicture("man", 8);
+	human.SetPicture(clothes_type, 8);
 	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
-
 	Uint32 green_light_time;         //mili giây
+	double green_light_time_array[4] = {1.5, 1.75, 2.275, 2.85};
 	Uint32 game_duration = 45;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 
-	Text time;
-	time.SetColor(Text::RED_TEXT);
-
 	int this_round_coins = 0;
-
+	double cloud_movement = 0;
+	
 	while (in_game){
-		time_value = SDL_GetTicks();
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT){
 				in_game = false; in_last_stand = false; in_home = false; in_menu = false;
@@ -110,65 +112,63 @@ int main(int arc, char*argv[]){
 		SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
 
 		//cloud_movement
-		cloud_movement -= 0.25;
-		SDLCommonFunc::ApplySurface(g_cloud, g_screen, cloud_movement, 0);
-		SDLCommonFunc::ApplySurface(g_cloud, g_screen, SCREEN_WIDTH + cloud_movement, 0);
-		if (cloud_movement <= -SCREEN_WIDTH) cloud_movement = 0;
+		CloudMovement(cloud_movement, g_cloud, g_screen);
+
+		time_value = SDL_GetTicks();
 
 		if (!handle_green_light && time_value >= start_green){ //bắt đầu đèn xanh
-			green_light_time = RandomNumber()*1000;
+			green_light_time = RandomNumber(green_light_time_array, 4) *1000;
 			start_red = start_green + green_light_time;        //cài đặt thời gian đèn đỏ tiếp theo
 			green_light = true;
 			handle_green_light = true;	
+			SDLCommonFunc::ApplySurface(green_doll, g_screen, 1000, 100);
 
-			switch(green_light_time){
-			case 1600: Mix_PlayChannel(-1, song1600, 0); break;
-			case 2000: Mix_PlayChannel(-1, song2000, 0); break;
-			case 2500: Mix_PlayChannel(-1, song2500, 0); break;
-			case 3000: Mix_PlayChannel(-1, song3000, 0); break;
-			}		
+			if (green_light_time == green_light_time_array[0]*1000) Mix_PlayChannel(-1, song1, 0); 
+			else if (green_light_time == green_light_time_array[1]*1000) Mix_PlayChannel(-1, song2, 0); 
+			else if (green_light_time == green_light_time_array[2]*1000) Mix_PlayChannel(-1, song3, 0); 
+			else if (green_light_time == green_light_time_array[3]*1000) Mix_PlayChannel(-1, song4, 0); 
+
+
 		}
 		if (handle_green_light && time_value >= start_red){    //bắt đầu đèn đỏ
 			start_green = start_red + 5500;                    //6s sau thì chuyển sang đèn xanh
 			green_light = false;
 			handle_green_light = false;
 			human.SetLastPosition();
+			SDLCommonFunc::ApplySurface(red_doll, g_screen, 1000, 100);
 
 			Mix_PlayChannel(-1, look_sound, 0);
+
 		}
 
-		if (green_light == true)  SDLCommonFunc::ApplySurface(green_doll, g_screen, 1000, 100);
-		if (green_light == false) SDLCommonFunc::ApplySurface(red_doll, g_screen, 1000, 100);
-
+		ShowDoll(green_light, green_doll, red_doll, g_screen);
+		
 		human.HandleMove();
 		human.ShowMainObject(g_screen);
 
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
-		if (check_time_remaining >=0 && check_time_remaining <= game_duration){
-		std::string time_remaining = std::to_string(check_time_remaining);
-		std::string time_heading("Time Remaining: ");
-		time_heading += time_remaining;
-		time.SetText(time_heading);
-		time.CreateGameText(g_font_text_1, g_screen);
-		}
+		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+		
 
-		bool win = false, lose = false; int used_time = 0;
-		if (human.GetRect().x < 940 && check_time_remaining < 0)
+		bool win = false, lose = false; int used_time = 0; Uint32 time_die, time_die_check_1, time_die_check_2;
+		if ((human.GetRect().x < 940 && check_time_remaining < 0)
+		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)){
 			lose = true;
+			Mix_PlayChannel(-1, shot_sound, 0); 
+			time_die = SDL_GetTicks();
+		}
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0){
 			win = true;
 			used_time = time_value/1000-game_start_time/1000;
 			this_round_coins = 45 - used_time;
 		}
-		if ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) 
-			&& green_light == false)
-			lose = true;
+
 
 		bool through_win = false;
 		while (win){
 			if (through_win == false){
-				SDL_Delay(1000); 
+			SDL_Delay(500); 
 			int win_number = SDLCommonFunc::ShowWin(this_round_coins, used_time, g_screen, g_font_text_4);
 			switch(win_number){
 			case -1: through_win = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
@@ -182,19 +182,44 @@ int main(int arc, char*argv[]){
 			if (through_win == true){
 				while(in_game_of_chance){
 					in_game_of_chance = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
-					//Bỏ dòng trên
+
+
 				}//kết thúc while(in_game_of_chance)
 
 			}//kết thúc if (through_win == true)
 		}//kết thúc while(win)
 		if (lose){
-			//
+			while (true){
+			time_die_check_1 = SDL_GetTicks();
+				SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
+				CloudMovement(cloud_movement , g_cloud, g_screen);
+				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+				ShowDoll(green_light, green_doll, red_doll, g_screen);
+				human.Show(g_screen);
+			if (time_die_check_1 - time_die >= 700) //700ms là thời gian từ lúc âm thanh kêu đến lúc bị ngã
+				break;
+			SDL_Flip(g_screen);
+			}//phải update lại hết ảnh không thì đám mây sẽ không di chuyển 
+			bool check = true;
+			while (check)
+			{
+				SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
+				CloudMovement(cloud_movement , g_cloud, g_screen);
+				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+				ShowDoll(green_light, green_doll, red_doll, g_screen);
+				SDLCommonFunc::ApplySurface(g_die, g_screen, human.GetRect().x, human.GetRect().y + HEIGHT_MAIN_OBJECT - WIDTH_MAIN_OBJECT);
+				time_die_check_2 = SDL_GetTicks();
+
+				if (time_die_check_2 - time_die_check_1 >= 3000){
+					int die_number = SDLCommonFunc::ShowDie(g_screen, g_font_text_4);
+					switch(die_number){
+					case 0: check = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+					default: return 0;		
+					}
+				}
+				SDL_Flip(g_screen);
+			}
 		}
-
-
-
-
-
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}
 

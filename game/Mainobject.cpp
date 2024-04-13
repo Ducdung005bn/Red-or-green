@@ -16,7 +16,7 @@ MainObject::~MainObject(){
 	//to do
 }
 void MainObject::HandleInputAction(SDL_Event events){
-	int speed = 5;
+	int speed = 10;
 	if (events.type == SDL_KEYDOWN){    //phím nhấn xuống
 	switch (events.key.keysym.sym){
 	case SDLK_UP:    y_val_ -= speed; break;
@@ -46,7 +46,7 @@ void MainObject::ShowMainObject(SDL_Surface *des){
 
 	for (int i = 1; i <= picture_number; i++){
 		if (picture_type == i)
-			p_object_ = SDLCommonFunc::LoadImage(picture_link + std::to_string((int)picture_type) + ".png"); 
+			p_object_ = SDLCommonFunc::LoadImage(clothes_type + std::to_string((int)picture_type) + ".png"); 
 	}
 	
 	if (x_val_ != 0 || y_val_ != 0){
@@ -57,8 +57,8 @@ void MainObject::ShowMainObject(SDL_Surface *des){
 	}
 	SDLCommonFunc::ApplySurface(p_object_, des, rect_.x, rect_.y);
 }
-void MainObject::SetPicture(std::string p_link, int p_number){
-	picture_link = p_link;
+void MainObject::SetPicture(std::string p_clothes, int p_number){
+	clothes_type = p_clothes;
 	picture_number = p_number;
 }
 void MainObject::SetLastPosition(){
