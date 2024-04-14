@@ -43,6 +43,7 @@ int main(int arc, char*argv[]){
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
 	int total_coins = 0;
+	int current_level = 1;
 
 	while(in_menu){
 		if (through_menu == false){
@@ -61,7 +62,7 @@ int main(int arc, char*argv[]){
 			switch(home_number){
 			case -1: through_home = false; in_home = false; in_menu = false; break;
 			case 0: through_home = false; in_home = false; in_menu = true; through_menu = false; break;
-			case 1: break;
+			case 1: through_home = true; in_shop = true; break;
 			case 2: through_home = true; in_shop = false; in_instructions = false; in_game = true; break;
 			case 3: break;
 			case 4: break;
@@ -69,7 +70,15 @@ int main(int arc, char*argv[]){
 			}//kết thúc if
 			if (through_home == true){
 				while(in_shop){
-					//To do
+					int shop_number = SDLCommonFunc::ShowShop(total_coins, g_screen, g_font_text_4, g_font_text_5);
+					switch(shop_number){
+					case -1: return 0;
+					case 0: in_shop = false; in_instructions = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+					}
+
+
+
+
 				}//Kết thúc while(in_shop)
 
 				while(in_instructions){

@@ -16,7 +16,7 @@ MainObject::~MainObject(){
 	//to do
 }
 void MainObject::HandleInputAction(SDL_Event events){
-	int speed = 1;
+	int speed = 10;
 	if (events.type == SDL_KEYDOWN){    //phím nhấn xuống
 	switch (events.key.keysym.sym){
 	case SDLK_UP:    y_val_ -= speed; break;

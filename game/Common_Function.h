@@ -26,6 +26,7 @@ static SDL_Surface *g_win = NULL;
 static SDL_Surface *g_die = NULL; //nhân vật
 static SDL_Surface *g_die_announcement; 
 static SDL_Surface *g_how = NULL; 
+static SDL_Surface *g_shop = NULL;
 
 static Mix_Chunk* song1 = NULL;
 static Mix_Chunk* song2 = NULL;
@@ -52,7 +53,7 @@ namespace SDLCommonFunc{
 	int ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ShowWin(int this_round_coins, int used_time, SDL_Surface* des, TTF_Font* font);
 	int ShowDie(SDL_Surface* des, TTF_Font* font);
-	int ShowShop(SDL_Surface* des, TTF_Font* font);
+	int ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 }
 
 #endif

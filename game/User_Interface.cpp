@@ -349,8 +349,97 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 	}
 	return -1;
 }
-int SDLCommonFunc::ShowShop(SDL_Surface* des, TTF_Font* font){
+int SDLCommonFunc::ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+	g_shop = LoadImage("shop.png");
+	if (g_shop == NULL) return -1;
+	const int home_item_number = 9;
+	SDL_Rect item_position[home_item_number];
+	int y_all = 524, w_buy = 30, h_buy = 20, w_i = 40, h_i = 30;
+	item_position[0].x = 10 ; item_position[0].y = 8 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
+	for (int i = 1; i <=4; i++){
+		item_position[i].y = y_all;
+		item_position[i].w = w_buy;
+		item_position[i].h = h_buy;
+	}
+	for (int i = 5; i <=8; i++){
+		item_position[i].y = y_all;
+		item_position[i].w = w_i;
+		item_position[i].h = h_i;
+	}
+	item_position[1].x = 145; item_position[5].x = item_position[1].x - 98;
+	item_position[2].x = 419; item_position[6].x = item_position[2].x - 98;
+	item_position[3].x = 693; item_position[7].x = item_position[3].x - 98;
+	item_position[4].x = 967; item_position[8].x = item_position[4].x - 98;
 
+	Text text_home[home_item_number];
+	text_home[0].SetText("Return");
+	for (int i = 1; i <= 4; i++){
+		text_home[i].SetText("BUY");}
+	for (int i = 5; i <= 8; i++){
+		text_home[i].SetText("i");}
+
+	for (int i = 0; i < home_item_number; i++){
+		text_home[i].SetColor(Text::BLACK_TEXT);
+		text_home[i].SetRect(item_position[i].x, item_position[i].y);
+	}
+
+	Text text_coins;
+	text_coins.SetText(std::to_string(total_coins));
+	text_coins.SetColor(Text::YELLOW_TEXT);
+	text_coins.SetRect(950, 35);
+
+
+	bool selected[home_item_number] = {0};
+	int mouse_x = 0, mouse_y = 0;
+	SDL_Event m_event;
+
+	while(true){
+				
+		SDLCommonFunc::ApplySurface(g_shop, des, 0, 0);
+		for (int i = 0; i < home_item_number; i++){
+			text_home[i].CreateGameText(font1, des);
+		}
+		text_coins.CreateGameText(font2, des);
+
+		while (SDL_PollEvent(&m_event)){
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+					for (int i = 0; i < home_item_number; i++){
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position[i]))
+						{
+							if (selected[i] == false){
+								selected[i] = true;
+								text_home[i].SetColor(Text::RED_TEXT);
+							}
+						}
+						else{
+							if (selected[i] == true){
+								selected[i] = false;
+								text_home[i].SetColor(Text::BLACK_TEXT);
+							}
+						}
+					}
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+                        for (int i = 0; i < home_item_number; i++){
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
+						 return i;
+						}
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+		}
+		SDL_Flip(des);
+	}
+	return -1;
 }
 
 
