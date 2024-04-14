@@ -53,7 +53,7 @@ namespace SDLCommonFunc{
 	int ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ShowWin(int this_round_coins, int used_time, SDL_Surface* des, TTF_Font* font);
 	int ShowDie(SDL_Surface* des, TTF_Font* font);
-	int ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
+	int ShowShop(int& current_level, int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 }
 
 #endif

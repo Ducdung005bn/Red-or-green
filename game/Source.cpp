@@ -70,7 +70,7 @@ int main(int arc, char*argv[]){
 			}//kết thúc if
 			if (through_home == true){
 				while(in_shop){
-					int shop_number = SDLCommonFunc::ShowShop(total_coins, g_screen, g_font_text_4, g_font_text_5);
+					int shop_number = SDLCommonFunc::ShowShop(current_level, total_coins, g_screen, g_font_text_4, g_font_text_5);
 					switch(shop_number){
 					case -1: return 0;
 					case 0: in_shop = false; in_instructions = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;

@@ -349,12 +349,12 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 	}
 	return -1;
 }
-int SDLCommonFunc::ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+int SDLCommonFunc::ShowShop(int& current_level, int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	g_shop = LoadImage("shop.png");
 	if (g_shop == NULL) return -1;
 	const int home_item_number = 9;
 	SDL_Rect item_position[home_item_number];
-	int y_all = 524, w_buy = 30, h_buy = 20, w_i = 40, h_i = 30;
+	int y_all = 524, w_buy = 52, h_buy = 28, w_i = 10, h_i = 30;
 	item_position[0].x = 10 ; item_position[0].y = 8 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
 	for (int i = 1; i <=4; i++){
 		item_position[i].y = y_all;
@@ -388,10 +388,10 @@ int SDLCommonFunc::ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 	text_coins.SetColor(Text::YELLOW_TEXT);
 	text_coins.SetRect(950, 35);
 
-
 	bool selected[home_item_number] = {0};
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
+	int choose_to_buy = 0; //choose nothing
 
 	while(true){
 				
@@ -425,9 +425,12 @@ int SDLCommonFunc::ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 				}
 			case SDL_MOUSEBUTTONDOWN:
 				{
-                        for (int i = 0; i < home_item_number; i++){
-						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
-						 return i;
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[0]))
+						return 0;
+						for (int i = 1; i <=4; i++){
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i])){
+							choose_to_buy = i; //Bấm chọn mua cái thứ 1, 2, 3 hay 4.
+						}
 						}
 					break;
 				}
@@ -437,6 +440,26 @@ int SDLCommonFunc::ShowShop(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 			default: break;
 			}
 		}
+		if (choose_to_buy != 0 && choose_to_buy <= current_level){
+			Text cannot_buy;
+			cannot_buy.SetColor(Text::NAVY_TEXT);
+			cannot_buy.SetText("You cannot buy because you already own this.");
+			cannot_buy.SetRect(255, 0);
+			int start_time = SDL_GetTicks(); // Thời điểm bắt đầu hiển thị text
+			while (SDL_GetTicks() - start_time <= 2000) { // Kiểm tra nếu đã qua 2 giây
+				SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); // Vẽ lại cửa hàng
+				for (int i = 0; i < home_item_number; i++) {
+					if (i != choose_to_buy)  // Không hiển thị text cho lựa chọn được chọn
+						text_home[i].CreateGameText(font1, des);
+				}
+                text_coins.CreateGameText(font2, des);
+                cannot_buy.CreateGameText(font1, des); // Hiển thị text không thể mua
+                SDL_Flip(des); // Cập nhật màn hình
+			}
+			choose_to_buy = 0;
+		}
+		
+
 		SDL_Flip(des);
 	}
 	return -1;
