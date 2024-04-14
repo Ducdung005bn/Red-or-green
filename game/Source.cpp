@@ -42,7 +42,7 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 0;
+	int total_coins = 300;
 	int current_level = 1;
 
 	while(in_menu){
@@ -74,6 +74,7 @@ int main(int arc, char*argv[]){
 					switch(shop_number){
 					case -1: return 0;
 					case 0: in_shop = false; in_instructions = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+					case 9: in_shop = true; break;     //Bấm buy nhưng khi xác nhận thì bấm no hoặc mua xong
 					}
 
 

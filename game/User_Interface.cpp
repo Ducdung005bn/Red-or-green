@@ -349,7 +349,7 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 	}
 	return -1;
 }
-int SDLCommonFunc::ShowShop(int& current_level, int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	g_shop = LoadImage("shop.png");
 	if (g_shop == NULL) return -1;
 	const int home_item_number = 9;
@@ -392,6 +392,7 @@ int SDLCommonFunc::ShowShop(int& current_level, int total_coins, SDL_Surface* de
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 	int choose_to_buy = 0; //choose nothing
+	int price_array[4] = {100, 200, 300, 400};
 
 	while(true){
 				
@@ -458,8 +459,149 @@ int SDLCommonFunc::ShowShop(int& current_level, int total_coins, SDL_Surface* de
 			}
 			choose_to_buy = 0;
 		}
+		if (choose_to_buy != 0 && choose_to_buy != current_level + 1){
+			Text cannot_buy;
+			cannot_buy.SetColor(Text::NAVY_TEXT);
+			cannot_buy.SetText("You cannot buy because you need to buy item " + std::to_string(current_level + 1) + " first.");
+			cannot_buy.SetRect(206, 0);
+			int start_time = SDL_GetTicks(); 
+			while (SDL_GetTicks() - start_time <= 2000) { 
+				SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); 
+				for (int i = 0; i < home_item_number; i++) {
+					if (i != choose_to_buy)  
+						text_home[i].CreateGameText(font1, des);
+				}
+                text_coins.CreateGameText(font2, des);
+                cannot_buy.CreateGameText(font1, des); 
+                SDL_Flip(des); 
+			}
+			choose_to_buy = 0;
+		}
+		if (choose_to_buy == current_level + 1){
+			if (total_coins < price_array[current_level]){
+				Text cannot_buy;
+			    cannot_buy.SetColor(Text::NAVY_TEXT);
+				int lack = price_array[current_level] - total_coins;
+				if (lack == 1)
+			    cannot_buy.SetText("You lack " + std::to_string(lack) + " coin for this purchase.");
+				else if (lack > 1)
+				cannot_buy.SetText("You lack " + std::to_string(lack) + " coins for this purchase.");
+
+			    cannot_buy.SetRect(315, 0);
+			    int start_time = SDL_GetTicks(); 
+			    while (SDL_GetTicks() - start_time <= 2000){ 
+				    SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); 
+				    for (int i = 0; i < home_item_number; i++) {
+					    if (i != choose_to_buy)  
+							text_home[i].CreateGameText(font1, des);
+				}
+                text_coins.CreateGameText(font2, des);
+                cannot_buy.CreateGameText(font1, des); 
+                SDL_Flip(des); 
+				}
+				choose_to_buy = 0;
+			}
+			else{
+				bool yes;
+				int number_confirm_purchase = ConfirmPurchase(des, font1, choose_to_buy, price_array[current_level]);
+				switch(number_confirm_purchase){
+				case -1: return -1;
+				case 0: yes = true; break;
+				case 1: yes = false; break;
+				}
+				if (!yes) return 9; //quay về in_shop
+				if (yes){
+					total_coins -= price_array[current_level];
+					current_level += 1;
+					return 9; //quay về in_shop
+				}
+			}
+		}
 		
 
+		SDL_Flip(des);
+	}
+	return -1;
+}
+int SDLCommonFunc::ConfirmPurchase(SDL_Surface* des, TTF_Font* font, int index, int price){ //n=4
+
+	g_confirm_purchase = LoadImage("confirm_purchase.png");
+	if (g_confirm_purchase == NULL) return -1;
+
+	const int item_number = 2;
+	SDL_Rect item_position[item_number];
+	item_position[0].x = 380 ; item_position[0].y = 434 ; item_position[0].w = 47 ; item_position[0].h = 30 ;
+	item_position[1].x = 675 ; item_position[1].y = 434 ; item_position[1].w = 44; item_position[1].h = 30;
+
+	Text text[item_number];
+	text[0].SetText("YES");
+	text[1].SetText("NO");
+
+	for (int i = 0; i < item_number; i++){
+		text[i].SetColor(Text::NAVY_TEXT);
+		text[i].SetRect(item_position[i].x, item_position[i].y);
+	}
+
+	Text type; type.SetColor(Text::RED_TEXT); type.SetRect(420, 287);
+	switch(index){
+	case 1: type.SetText("casual clothes"); break;
+	case 2: type.SetText("blue-collar clothes"); break;
+	case 3: type.SetText("white-collar clothes"); break;
+	case 4: type.SetText("doll clothes"); break;
+	}
+	Text price_text; price_text.SetColor(Text::RED_TEXT); price_text.SetRect(535, 333);
+	price_text.SetText(std::to_string(price));
+
+
+	bool selected[item_number] = {0};
+	int mouse_x = 0, mouse_y = 0;
+	SDL_Event m_event;
+
+	while(true){
+		SDLCommonFunc::ApplySurface(g_confirm_purchase, des, 220, 144);
+		type.CreateGameText(font, des);
+		price_text.CreateGameText(font, des);
+
+		for (int i = 0; i < item_number; i++){
+			text[i].CreateGameText(font, des);
+		}
+
+		while (SDL_PollEvent(&m_event)){
+
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+					for (int i = 0; i < item_number; i++){
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position[i])){
+							if (selected[i] == false){
+								selected[i] = true;
+								text[i].SetColor(Text::GREEN_TEXT);
+							}
+						}
+						else{
+							if (selected[i] == true){
+								selected[i] = false;
+								text[i].SetColor(Text::NAVY_TEXT);
+							}
+						}
+					}
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+                        for (int i = 0; i < item_number ; i++){ 
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
+						 return i;
+						}
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+		}
 		SDL_Flip(des);
 	}
 	return -1;
