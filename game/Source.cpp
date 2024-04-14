@@ -2,6 +2,7 @@
 #include "Mainobject.h"
 #include "Light.h"
 #include "Text.h"
+#
 
 bool Init(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
@@ -10,14 +11,10 @@ bool Init(){
 
 	//Khởi tạo audio
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
-	song1 = Mix_LoadWAV("song1.wav");
-	song2 = Mix_LoadWAV("song2.wav");
-	song3 = Mix_LoadWAV("song3.wav");
-	song4 = Mix_LoadWAV("song4.wav");
+
 	look_sound = Mix_LoadWAV("look_sound.wav");
 	shot_sound = Mix_LoadWAV("pistol-shot.wav");
-	if (song1 == NULL || song2 == NULL || song3 == NULL || song4 == NULL || look_sound == NULL
-		|| shot_sound == NULL) 
+	if (look_sound == NULL || shot_sound == NULL) 
 	return false;
 
 	//Khởi tạo text
@@ -85,12 +82,12 @@ int main(int arc, char*argv[]){
     Uint32 time_value;
 	Uint32 game_start_time = SDL_GetTicks()+500;   
 
-	std::string clothes_type = "man";
+	std::string clothes_type = "worker";
 	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
 	
 	MainObject human;
 	human.SetRect(0, 250);
-	human.SetPicture(clothes_type, 8);
+	human.SetPicture(clothes_type, 15);
 	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
@@ -101,6 +98,8 @@ int main(int arc, char*argv[]){
 
 	int this_round_coins = 0;
 	double cloud_movement = 0;
+
+	
 	
 	while (in_game){
 		while (SDL_PollEvent(&g_event)){
@@ -121,24 +120,14 @@ int main(int arc, char*argv[]){
 			start_red = start_green + green_light_time;        //cài đặt thời gian đèn đỏ tiếp theo
 			green_light = true;
 			handle_green_light = true;	
-			SDLCommonFunc::ApplySurface(green_doll, g_screen, 1000, 100);
-
-			if (green_light_time == green_light_time_array[0]*1000) Mix_PlayChannel(-1, song1, 0); 
-			else if (green_light_time == green_light_time_array[1]*1000) Mix_PlayChannel(-1, song2, 0); 
-			else if (green_light_time == green_light_time_array[2]*1000) Mix_PlayChannel(-1, song3, 0); 
-			else if (green_light_time == green_light_time_array[3]*1000) Mix_PlayChannel(-1, song4, 0); 
-
-
+			PlaySong(green_light_time, green_light_time_array, 4);
 		}
 		if (handle_green_light && time_value >= start_red){    //bắt đầu đèn đỏ
 			start_green = start_red + 5500;                    //6s sau thì chuyển sang đèn xanh
 			green_light = false;
 			handle_green_light = false;
 			human.SetLastPosition();
-			SDLCommonFunc::ApplySurface(red_doll, g_screen, 1000, 100);
-
 			Mix_PlayChannel(-1, look_sound, 0);
-
 		}
 
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
@@ -196,7 +185,7 @@ int main(int arc, char*argv[]){
 				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 				ShowDoll(green_light, green_doll, red_doll, g_screen);
 				human.Show(g_screen);
-			if (time_die_check_1 - time_die >= 700) //700ms là thời gian từ lúc âm thanh kêu đến lúc bị ngã
+			if (time_die_check_1 - time_die >= 850) //850ms là thời gian từ lúc âm thanh kêu đến lúc bị ngã
 				break;
 			SDL_Flip(g_screen);
 			}//phải update lại hết ảnh không thì đám mây sẽ không di chuyển 

@@ -1,8 +1,17 @@
 ﻿#include "User_Interface.h"
 
+bool MouseCheck(int mouse_x, int mouse_y, SDL_Rect input){
+	if (mouse_x >= input.x
+	 && mouse_y >= input.y
+	 && mouse_y <= input.y + input.h
+	 && mouse_x <= input.x + input.w)
+	 return true;
+	return false;
+}
+
 int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){ //trả chỉ số chọn item
-	g_poster = LoadImage("poster.png");
-	if (g_poster == NULL) return 1; //1 là exit
+
+	g_poster = LoadImage("poster.png"); if (g_poster == NULL) return 1; //1 là exit
 	
 	const int menu_item_number = 2;
 	SDL_Rect item_position[menu_item_number];
@@ -37,28 +46,19 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 			case SDL_QUIT: return 1; //1 là exit
 			case SDL_MOUSEMOTION:
 				{
-					mouse_x = m_event.motion.x;
-					mouse_y = m_event.motion.y;
 					
 					for (int i = 0; i < menu_item_number; i++){
-						if (mouse_x >= item_position[i].x
-					     && mouse_y >= item_position[i].y
-						 && mouse_y <= item_position[i].y + item_position[i].h
-						 && mouse_x <= item_position[i].x + item_position[i].w)
-						{
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position[i])){
 							//nhấp chuột qua, chưa chọn (màu đen) thành chọn (màu đỏ). Nếu chọn rồi (màu đỏ) thì giữ nguyên
-							if (selected[i] == false) 
-							{
+							if (selected[i] == false) {
 								selected[i] = 1;
 								text_menu[i].SetColor(Text::RED_TEXT);
 								current_font[i] = font2;
 							}
 						}
-						else
-						{
+						else{
 							//chuột không qua, chưa chọn (màu đen) giữ nguyên. Nếu chọn rồi thì thành chưa chọn (màu đen)
-							if (selected[i] == true)
-							{
+							if (selected[i] == true){
 								selected[i] = 0;
 								text_menu[i].SetColor(Text::BLACK_TEXT);
 								current_font[i] = font1;
@@ -69,13 +69,8 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 				}
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					mouse_x = m_event.button.x;
-					mouse_y = m_event.button.y;
 					for (int i = 0; i < menu_item_number; i++){
-						if (mouse_x >= item_position[i].x
-						 && mouse_y >= item_position[i].y
-						 && mouse_y <= item_position[i].y + item_position[i].h
-						 && mouse_x <= item_position[i].x + item_position[i].w)
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
 						return i;
 					} 
 					break;
@@ -92,6 +87,7 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 }
 
 int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+
 	g_home = LoadImage("home.png");
 	if (g_home == NULL) return -1;
 	const int home_item_number = 5;
@@ -160,17 +156,14 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 						 && mouse_y <= item_position[i].y + item_position[i].h
 						 && mouse_x <= item_position[i].x + item_position[i].w)
 						{
-							if (selected[i] == false)
-							{
+							if (selected[i] == false){
 								selected[i] = true;
 								text_home[i].SetColor(Text::RED_TEXT);
 								if (i != 0) current_home_picture = i;
 							}
 						}
-						else
-						{
-							if (selected[i] == true)
-							{
+						else{
+							if (selected[i] == true){
 								selected[i] = false;
 								text_home[i].SetColor(Text::BLACK_TEXT);
 								if (i != 0) current_home_picture = 0;
@@ -181,13 +174,8 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 				}
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					mouse_x = m_event.button.x;
-					mouse_y = m_event.button.y;
                         for (int i = 0; i < home_item_number; i++){
-						if (mouse_x >= item_position[i].x - 62
-						 && mouse_y >= item_position[i].y
-						 && mouse_y <= item_position[i].y + item_position[i].h
-						 && mouse_x <= item_position[i].x + item_position[i].w)
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
 						 return i;
 						}
 					break;
@@ -197,7 +185,6 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 					return -1;
 			default: break;
 			}
-
 		}
 		SDL_Flip(des);
 	}
@@ -270,29 +257,18 @@ int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des
 			case SDL_QUIT: return -1;
 			case SDL_MOUSEMOTION:
 				{
-					mouse_x = m_event.motion.x;
-					mouse_y = m_event.motion.y;
 					for (int i = 0; i < win_item_number; i++){
-						if (mouse_x >= item_position[i].x 
-						 && mouse_y >= item_position[i].y 
-						 && mouse_y <= item_position[i].y + item_position[i].h
-						 && mouse_x <= item_position[i].x + item_position[i].w)
-						{
-							if (selected[i] == false)
-							{
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position[i])){
+							if (selected[i] == false){
 								selected[i] = true;
 								text_win[i].SetColor(Text::YELLOW_TEXT);
 
 							}
 						}
-						else
-						{
-							if (selected[i] == true)
-							{
+						else{
+							if (selected[i] == true){
 								selected[i] = false;
 								text_win[i].SetColor(Text::NAVY_TEXT);
-
-
 							}
 						}
 					}
@@ -300,13 +276,8 @@ int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des
 				}
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					mouse_x = m_event.button.x;
-					mouse_y = m_event.button.y;
                         for (int i = 0; i < win_item_number-1 ; i++){ //bấm chuột chỉ nhận return (0) và yes (1). 
-						if (mouse_x >= item_position[i].x 
-						 && mouse_y >= item_position[i].y
-						 && mouse_y <= item_position[i].y + item_position[i].h
-						 && mouse_x <= item_position[i].x + item_position[i].w)
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
 						 return i;
 						}
 					break;
@@ -345,38 +316,23 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 			case SDL_QUIT: return -1;
 			case SDL_MOUSEMOTION:
 				{
-					mouse_x = m_event.motion.x;
-					mouse_y = m_event.motion.y;
-					if (mouse_x >= return_position.x 
-						 && mouse_y >= return_position.y 
-						 && mouse_y <= return_position.y + return_position.h
-						 && mouse_x <= return_position.x + return_position.w)
-						{
-							if (selected == false)
-							{
+					if (MouseCheck(m_event.motion.x, m_event.motion.y, return_position)){
+							if (selected == false){
 								selected = true;
 								text_return.SetColor(Text::NAVY_TEXT);
 							}
 						}
-						else
-						{
-							if (selected == true)
-							{
+						else{
+							if (selected == true){
 								selected = false;
 								text_return.SetColor(Text::RED_TEXT);
 							}
 						}
-					
 					break;
 				}
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					mouse_x = m_event.button.x;
-					mouse_y = m_event.button.y;
-						if (mouse_x >= return_position.x 
-						 && mouse_y >= return_position.y
-						 && mouse_y <= return_position.y + return_position.h
-						 && mouse_x <= return_position.x + return_position.w)
+						if (MouseCheck(m_event.button.x, m_event.button.y, return_position))
 						 return 0;
 						
 					break;
@@ -392,6 +348,9 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 		SDL_Flip(des);
 	}
 	return -1;
+}
+int SDLCommonFunc::ShowShop(SDL_Surface* des, TTF_Font* font){
+
 }
 
 
