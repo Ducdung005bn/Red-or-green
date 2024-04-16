@@ -24,7 +24,7 @@ private:
 	double picture_type;
 	std::string clothes_type; //tên đường dẫn tới tranh = clothes_type + picture_type
 	int picture_number; //số lượng tranh tạo animation
-	SDL_Rect last_position; //lưu vị trí người chơi khi hết đèn xanh (để kiểm tra di chuyển không)
+	SDL_Rect last_position; 
 };
 
 #endif

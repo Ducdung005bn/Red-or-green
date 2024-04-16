@@ -16,7 +16,7 @@ MainObject::~MainObject(){
 	//to do
 }
 void MainObject::HandleInputAction(SDL_Event events){
-	int speed = 10;
+	int speed = 1;
 	if (events.type == SDL_KEYDOWN){    //phím nhấn xuống
 	switch (events.key.keysym.sym){
 	case SDLK_UP:    y_val_ -= speed; break;
@@ -43,7 +43,7 @@ void MainObject::HandleMove(){
 }
 
 void MainObject::ShowMainObject(SDL_Surface *des){
-	double animation_speed = 0.25;
+	double animation_speed = 0.25/2;
 
 	for (int i = 1; i <= picture_number; i++){
 		if (picture_type == i) 

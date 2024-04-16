@@ -1,6 +1,5 @@
 ﻿#include "User_Interface.h"
-
-bool MouseCheck(int mouse_x, int mouse_y, SDL_Rect input){
+bool SDLCommonFunc::MouseCheck(int mouse_x, int mouse_y, SDL_Rect input){
 	if (mouse_x >= input.x
 	 && mouse_y >= input.y
 	 && mouse_y <= input.y + input.h
@@ -352,8 +351,8 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	g_shop = LoadImage("shop.png");
 	if (g_shop == NULL) return -1;
-	const int home_item_number = 9;
-	SDL_Rect item_position[home_item_number];
+	const int shop_item_number = 9;
+	SDL_Rect item_position[shop_item_number];
 	int y_all = 524, w_buy = 52, h_buy = 28, w_i = 10, h_i = 30;
 	item_position[0].x = 10 ; item_position[0].y = 8 ; item_position[0].w = 86 ; item_position[0].h = 30 ;
 	for (int i = 1; i <=4; i++){
@@ -371,16 +370,16 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	item_position[3].x = 693; item_position[7].x = item_position[3].x - 98;
 	item_position[4].x = 967; item_position[8].x = item_position[4].x - 98;
 
-	Text text_home[home_item_number];
-	text_home[0].SetText("Return");
+	Text text_shop[shop_item_number];
+	text_shop[0].SetText("Return");
 	for (int i = 1; i <= 4; i++){
-		text_home[i].SetText("BUY");}
+		text_shop[i].SetText("BUY");}
 	for (int i = 5; i <= 8; i++){
-		text_home[i].SetText("i");}
+		text_shop[i].SetText("i");}
 
-	for (int i = 0; i < home_item_number; i++){
-		text_home[i].SetColor(Text::BLACK_TEXT);
-		text_home[i].SetRect(item_position[i].x, item_position[i].y);
+	for (int i = 0; i < shop_item_number; i++){
+		text_shop[i].SetColor(Text::BLACK_TEXT);
+		text_shop[i].SetRect(item_position[i].x, item_position[i].y);
 	}
 
 	Text text_coins;
@@ -388,37 +387,62 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	text_coins.SetColor(Text::YELLOW_TEXT);
 	text_coins.SetRect(950, 35);
 
-	bool selected[home_item_number] = {0};
+	bool selected[shop_item_number] = {0};
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 	int choose_to_buy = 0; //choose nothing
-	int price_array[4] = {100, 200, 300, 400};
+	int price_array[4] = {0, 100, 200, 300};
+
+	Text item_price[4];
+	for (int i = 0; i < 4; i++){
+		item_price[i].SetColor(Text::YELLOW_TEXT);
+		item_price[i].SetText(std::to_string(price_array[i]));
+		item_price[i].SetRect(item_position[i+1].x - 75, 145);
+	}
+
+	g_font_text_6 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 150);
+	if (g_font_text_6 == NULL) return -1;
+	Text owned[shop_item_number]; 
+	for (int i = 0; i < shop_item_number; i++){
+		owned[i].SetColor(Text::RED_TEXT);
+		owned[i].SetText("O");
+	}
+	int owned_y = 220;
+	owned[0].SetRect(81, owned_y); owned[1].SetRect(350, owned_y); owned[2].SetRect(625, owned_y); owned[3].SetRect(907, owned_y);
+
 
 	while(true){
 				
 		SDLCommonFunc::ApplySurface(g_shop, des, 0, 0);
-		for (int i = 0; i < home_item_number; i++){
-			text_home[i].CreateGameText(font1, des);
+		for (int i = 0; i < shop_item_number; i++){
+			text_shop[i].CreateGameText(font1, des);
 		}
 		text_coins.CreateGameText(font2, des);
+		for (int i = 0; i < 4; i++){
+			item_price[i].CreateGameText(font2, des);
+		}
+		for (int i = 0; i < 4; i++){
+			if (i < current_level)
+			owned[i].CreateGameText(g_font_text_6, des);
+		}
 
 		while (SDL_PollEvent(&m_event)){
 			switch(m_event.type){
 			case SDL_QUIT: return -1;
 			case SDL_MOUSEMOTION:
 				{
-					for (int i = 0; i < home_item_number; i++){
+					for (int i = 0; i < shop_item_number; i++){
 						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position[i]))
 						{
 							if (selected[i] == false){
 								selected[i] = true;
-								text_home[i].SetColor(Text::RED_TEXT);
+								text_shop[i].SetColor(Text::RED_TEXT);
 							}
 						}
 						else{
 							if (selected[i] == true){
 								selected[i] = false;
-								text_home[i].SetColor(Text::BLACK_TEXT);
+								text_shop[i].SetColor(Text::BLACK_TEXT);
 							}
 						}
 					}
@@ -449,11 +473,18 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 			int start_time = SDL_GetTicks(); // Thời điểm bắt đầu hiển thị text
 			while (SDL_GetTicks() - start_time <= 2000) { // Kiểm tra nếu đã qua 2 giây
 				SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); // Vẽ lại cửa hàng
-				for (int i = 0; i < home_item_number; i++) {
+				for (int i = 0; i < shop_item_number; i++) {
 					if (i != choose_to_buy)  // Không hiển thị text cho lựa chọn được chọn
-						text_home[i].CreateGameText(font1, des);
+						text_shop[i].CreateGameText(font1, des);
 				}
                 text_coins.CreateGameText(font2, des);
+				for (int i = 0; i < 4; i++){
+					item_price[i].CreateGameText(font2, des);
+				}
+                for (int i = 0; i < 4; i++){
+					if (i < current_level)
+						owned[i].CreateGameText(g_font_text_6, des);
+				}
                 cannot_buy.CreateGameText(font1, des); // Hiển thị text không thể mua
                 SDL_Flip(des); // Cập nhật màn hình
 			}
@@ -467,11 +498,18 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 			int start_time = SDL_GetTicks(); 
 			while (SDL_GetTicks() - start_time <= 2000) { 
 				SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); 
-				for (int i = 0; i < home_item_number; i++) {
+				for (int i = 0; i < shop_item_number; i++) {
 					if (i != choose_to_buy)  
-						text_home[i].CreateGameText(font1, des);
+						text_shop[i].CreateGameText(font1, des);
 				}
                 text_coins.CreateGameText(font2, des);
+				for (int i = 0; i < 4; i++){
+					item_price[i].CreateGameText(font2, des);
+				}
+                for (int i = 0; i < 4; i++){
+					if (i < current_level)
+						owned[i].CreateGameText(g_font_text_6, des);
+				}
                 cannot_buy.CreateGameText(font1, des); 
                 SDL_Flip(des); 
 			}
@@ -490,12 +528,19 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 			    cannot_buy.SetRect(315, 0);
 			    int start_time = SDL_GetTicks(); 
 			    while (SDL_GetTicks() - start_time <= 2000){ 
-				    SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); 
-				    for (int i = 0; i < home_item_number; i++) {
+				SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); 
+				    for (int i = 0; i < shop_item_number; i++) {
 					    if (i != choose_to_buy)  
-							text_home[i].CreateGameText(font1, des);
+							text_shop[i].CreateGameText(font1, des);
 				}
                 text_coins.CreateGameText(font2, des);
+				for (int i = 0; i < 4; i++){
+					item_price[i].CreateGameText(font2, des);
+				}
+                for (int i = 0; i < 4; i++){
+					if (i < current_level)
+						owned[i].CreateGameText(g_font_text_6, des);
+				}
                 cannot_buy.CreateGameText(font1, des); 
                 SDL_Flip(des); 
 				}

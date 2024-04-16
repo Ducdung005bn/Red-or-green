@@ -80,7 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Baseobject.cpp" />
-    <ClCompile Include="GameItems.cpp" />
+    <ClCompile Include="Follower.cpp" />
     <ClCompile Include="Common_Function.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Mainobject.cpp" />
@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Baseobject.h" />
-    <ClInclude Include="GameItems.h" />
+    <ClInclude Include="Follower.h" />
     <ClInclude Include="Common_Function.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mainobject.h" />

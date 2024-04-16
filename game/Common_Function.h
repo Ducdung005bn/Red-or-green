@@ -9,6 +9,8 @@
 #include <ctime>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <vector>
+#include <algorithm>
 
 const int SCREEN_WIDTH = 1099;
 const int SCREEN_HEIGHT = 621;
@@ -22,6 +24,7 @@ static SDL_Surface *g_home = NULL;
 static SDL_Surface *g_cloud = NULL;
 static SDL_Surface *green_doll = NULL;
 static SDL_Surface *red_doll = NULL;
+static SDL_Surface *g_bomb = NULL;
 static SDL_Surface *g_win = NULL;
 static SDL_Surface *g_die = NULL; //nhân vật
 static SDL_Surface *g_die_announcement; 
@@ -41,7 +44,7 @@ static TTF_Font* g_font_text_2 = NULL;
 static TTF_Font* g_font_text_3 = NULL;
 static TTF_Font* g_font_text_4 = NULL;
 static TTF_Font* g_font_text_5 = NULL;
-
+static TTF_Font* g_font_text_6 = NULL;
 
 
 static SDL_Event g_event; //xử lí các sự kiện
@@ -56,6 +59,7 @@ namespace SDLCommonFunc{
 	int ShowDie(SDL_Surface* des, TTF_Font* font);
 	int ShowShop(int& current_level, int& total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ConfirmPurchase(SDL_Surface* des, TTF_Font* font, int index, int price);
+	bool MouseCheck(int mouse_x, int mouse_y, SDL_Rect input);
 }
 
 #endif

@@ -36,7 +36,7 @@
     <ClCompile Include="User_Interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameItems.cpp">
+    <ClCompile Include="Follower.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClInclude Include="User_Interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameItems.h">
+    <ClInclude Include="Follower.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

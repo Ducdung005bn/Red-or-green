@@ -2,7 +2,7 @@
 #include "Mainobject.h"
 #include "Light.h"
 #include "Text.h"
-#
+#include "Follower.h"
 
 bool Init(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
@@ -38,11 +38,13 @@ int main(int arc, char*argv[]){
 	g_cloud    = SDLCommonFunc::LoadImage("p.cloud.png"); if (g_cloud == NULL) return 0; 
 	green_doll = SDLCommonFunc::LoadImage("p.green_doll.png"); if (green_doll == NULL) return 0;
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
+	g_bomb   = SDLCommonFunc::LoadImage("bomb.png"); if (g_bomb == NULL) return 0;
+
 
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 300;
+	int total_coins = 1000;
 	int current_level = 1;
 
 	while(in_menu){
@@ -76,10 +78,6 @@ int main(int arc, char*argv[]){
 					case 0: in_shop = false; in_instructions = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
 					case 9: in_shop = true; break;     //Bấm buy nhưng khi xác nhận thì bấm no hoặc mua xong
 					}
-
-
-
-
 				}//Kết thúc while(in_shop)
 
 				while(in_instructions){
@@ -92,12 +90,16 @@ int main(int arc, char*argv[]){
     Uint32 time_value;
 	Uint32 game_start_time = SDL_GetTicks()+500;   
 
-	std::string clothes_type = "worker";
+	std::string clothes_type = "man";
 	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
 	
 	MainObject human;
 	human.SetRect(0, 250);
-	human.SetPicture(clothes_type, 15);
+	human.SetPicture(clothes_type, 12);
+
+	//guard
+	Follower guard;
+	guard.SetRect(0, 400);
 	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
@@ -109,8 +111,7 @@ int main(int arc, char*argv[]){
 	int this_round_coins = 0;
 	double cloud_movement = 0;
 
-	
-	
+
 	while (in_game){
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT){
@@ -124,6 +125,7 @@ int main(int arc, char*argv[]){
 		CloudMovement(cloud_movement, g_cloud, g_screen);
 
 		time_value = SDL_GetTicks();
+
 
 		if (!handle_green_light && time_value >= start_green){ //bắt đầu đèn xanh
 			green_light_time = RandomNumber(green_light_time_array, 4) *1000;
@@ -145,19 +147,24 @@ int main(int arc, char*argv[]){
 		human.HandleMove();
 		human.ShowMainObject(g_screen);
 
+		//guard
+		guard.ShowFollower(g_screen);
+
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
 		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 		
-
 		bool win = false, lose = false; int used_time = 0; Uint32 time_die, time_die_check_1, time_die_check_2;
+
+
+
 		if ((human.GetRect().x < 940 && check_time_remaining < 0)
 		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)){
 			lose = true;
 			Mix_PlayChannel(-1, shot_sound, 0); 
 			time_die = SDL_GetTicks();
 		}
-		if (human.GetRect().x >= 940 && check_time_remaining >= 0){
+		if (human.GetRect().x >= 940 && check_time_remaining >= 0  && green_light == true){
 			win = true;
 			used_time = time_value/1000-game_start_time/1000;
 			this_round_coins = 45 - used_time;
@@ -187,6 +194,7 @@ int main(int arc, char*argv[]){
 
 			}//kết thúc if (through_win == true)
 		}//kết thúc while(win)
+
 		if (lose){
 			while (true){
 			time_die_check_1 = SDL_GetTicks();
