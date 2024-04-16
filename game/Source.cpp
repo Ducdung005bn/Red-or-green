@@ -94,12 +94,12 @@ int main(int arc, char*argv[]){
 	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
 	
 	MainObject human;
-	human.SetRect(0, 250);
+	human.SetFullRect(0, 250, 90, 180);
 	human.SetPicture(clothes_type, 12);
 
 	//guard
 	Follower guard;
-	guard.SetRect(0, 400);
+	guard.SetFullRect(0, 400, 69, 110);
 	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
@@ -145,10 +145,16 @@ int main(int arc, char*argv[]){
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
 		
 		human.HandleMove();
-		human.ShowMainObject(g_screen);
+		guard.MoveFollower(human.GetRect(), green_light);
 
-		//guard
-		guard.ShowFollower(g_screen);
+		if (human.GetRect().y + human.GetRect().h >= guard.GetRect().y + guard.GetRect().h){
+			guard.ShowFollower(g_screen);
+			human.ShowMainObject(g_screen);
+		}
+		else{
+			human.ShowMainObject(g_screen);
+			guard.ShowFollower(g_screen);
+		}
 
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
@@ -160,9 +166,9 @@ int main(int arc, char*argv[]){
 
 		if ((human.GetRect().x < 940 && check_time_remaining < 0)
 		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)){
-			lose = true;
-			Mix_PlayChannel(-1, shot_sound, 0); 
-			time_die = SDL_GetTicks();
+			//lose = true;
+			//Mix_PlayChannel(-1, shot_sound, 0); 
+			//time_die = SDL_GetTicks();
 		}
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0  && green_light == true){
 			win = true;
