@@ -99,6 +99,24 @@ void CheckCollisionBasedOnLevel(bool& check_collision, const int& current_level,
             break;
     }
 }
+void DetermineClothesTypeAndFrames(const int& current_level, std::string& clothes_type, int& number_of_frames) {
+    switch(current_level) {
+        case 1:
+            clothes_type = "man";
+            number_of_frames = 12;
+            break;
+        case 2:
+            clothes_type = "worker";
+            number_of_frames = 15;
+            break;
+        case 3:
+            clothes_type = "businessman";
+            number_of_frames = 18;
+            break;
+        default:
+            break;
+    }
+}
 
 
 

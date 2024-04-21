@@ -11,5 +11,6 @@ void ShowDoll(bool green_light, SDL_Surface* green_doll, SDL_Surface* red_doll, 
 void PlaySong(Uint32 green_light_time, double green_light_time_array[], int n);
 void DisplayObjectsBasedOnLevel(const int& current_level, MainObject &human, Follower &guard_1, Follower &guard_2, SDL_Surface* des);
 void CheckCollisionBasedOnLevel(bool& check_collision, const int& current_level, const Follower& guard_1, const Follower& guard_2, const MainObject& human);
+void DetermineClothesTypeAndFrames(const int& current_level, std::string& clothes_type, int& number_of_frames);
 
 #endif

@@ -87,16 +87,19 @@ int main(int arc, char*argv[]){
 //Bắt đầu chơi
 
     Uint32 time_value;
-	Uint32 game_start_time = SDL_GetTicks()+500;   
+	Uint32 game_start_time = SDL_GetTicks()+500; 
 
-	std::string clothes_type = "worker";
-	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
-	
 	MainObject human;
 	human.SetFullRect(0, 250, 120, 180);
-	human.SetPicture(clothes_type, 15);
 	human.SetSpeed(1);
 
+	std::string clothes_type;
+	int number_of_frames;
+	DetermineClothesTypeAndFrames(current_level, clothes_type, number_of_frames);
+
+	human.SetPicture(clothes_type, number_of_frames);
+	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
+	
 	Follower guard_1;
 	guard_1.SetFullRect(-69, SCREEN_HEIGHT, 69, 110);
 	Follower guard_2;
