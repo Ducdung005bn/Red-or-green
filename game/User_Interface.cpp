@@ -651,5 +651,74 @@ int SDLCommonFunc::ConfirmPurchase(SDL_Surface* des, TTF_Font* font, int index, 
 	}
 	return -1;
 }
+int SDLCommonFunc::ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font){
+	g_need_to_upgrade = LoadImage("need_to_upgrade.png");
+	if (g_need_to_upgrade == NULL) return -1;
+
+	const int item_number = 2;
+	SDL_Rect item_position[item_number];
+	item_position[0].x = 285 ; item_position[0].y = 400 ; item_position[0].w = 100 ; item_position[0].h = 30 ;
+	item_position[1].x = 690 ; item_position[1].y = 400 ; item_position[1].w = 120; item_position[1].h = 30;
+
+	Text text[item_number];
+	text[0].SetText("RETURN");
+	text[1].SetText("UPGRADE");
+
+	for (int i = 0; i < item_number; i++){
+		text[i].SetColor(Text::YELLOW_TEXT);
+		text[i].SetRect(item_position[i].x, item_position[i].y);
+	}
+
+	bool selected[item_number] = {0};
+	int mouse_x = 0, mouse_y = 0;
+	SDL_Event m_event;
+
+	while(true){
+		SDLCommonFunc::ApplySurface(g_need_to_upgrade, des, 220, 144);
+
+		for (int i = 0; i < item_number; i++){
+			text[i].CreateGameText(font, des);
+		}
+
+		while (SDL_PollEvent(&m_event)){
+
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+					for (int i = 0; i < item_number; i++){
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position[i])){
+							if (selected[i] == false){
+								selected[i] = true;
+								text[i].SetColor(Text::RED_TEXT);
+							}
+						}
+						else{
+							if (selected[i] == true){
+								selected[i] = false;
+								text[i].SetColor(Text::YELLOW_TEXT);
+							}
+						}
+					}
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+                        for (int i = 0; i < item_number ; i++){ 
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
+						 return i;
+						}
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+		}
+		SDL_Flip(des);
+	}
+	return -1;
+}
 
 

@@ -11,6 +11,8 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font);
 int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 int SDLCommonFunc::ConfirmPurchase(SDL_Surface* des, TTF_Font* font, int index, int price);
 bool SDLCommonFunc::MouseCheck(int mouse_x, int mouse_y, SDL_Rect input);
+int SDLCommonFunc::ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font);
+
 
 
 

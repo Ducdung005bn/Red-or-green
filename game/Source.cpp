@@ -43,8 +43,8 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 1000;
-	int current_level = 1;
+	int total_coins = 120;
+	int current_level = 1; 	int price_array[4] = {0, 100, 200, 300};
 
 	while(in_menu){
 		if (through_menu == false){
@@ -85,6 +85,21 @@ int main(int arc, char*argv[]){
 
 				while(in_game){
 //Bắt đầu chơi
+	if (current_level == 4){
+		//To do
+	}
+	if (total_coins >= price_array[current_level]){
+		int need_to_upgrade_number = SDLCommonFunc::ShowNeedToUpgrade(g_screen, g_font_text_4);
+		switch (need_to_upgrade_number){
+		case -1: return 0;
+		case 0: in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+		case 1: in_game = false; in_last_stand = false; in_home = true; through_home = true; in_shop = true; break;
+		default: return 0;
+		}
+	}
+
+
+
 
     Uint32 time_value;
 	Uint32 game_start_time = SDL_GetTicks()+500; 
@@ -171,9 +186,9 @@ int main(int arc, char*argv[]){
 		if ((human.GetRect().x < 940 && check_time_remaining < 0)
 		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)
 		|| check_collision){
-			lose = true;
-			Mix_PlayChannel(-1, shot_sound, 0); 
-			time_die = SDL_GetTicks();
+			//lose = true;
+			//Mix_PlayChannel(-1, shot_sound, 0); 
+			//time_die = SDL_GetTicks();
 		}
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0  && green_light == true){
 			win = true;
