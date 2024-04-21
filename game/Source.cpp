@@ -38,7 +38,6 @@ int main(int arc, char*argv[]){
 	g_cloud    = SDLCommonFunc::LoadImage("p.cloud.png"); if (g_cloud == NULL) return 0; 
 	green_doll = SDLCommonFunc::LoadImage("p.green_doll.png"); if (green_doll == NULL) return 0;
 	red_doll   = SDLCommonFunc::LoadImage("p.red_doll.png"); if (red_doll == NULL) return 0;
-	g_bomb   = SDLCommonFunc::LoadImage("bomb.png"); if (g_bomb == NULL) return 0;
 
 
 	bool in_menu = true, through_menu = false;
@@ -90,16 +89,20 @@ int main(int arc, char*argv[]){
     Uint32 time_value;
 	Uint32 game_start_time = SDL_GetTicks()+500;   
 
-	std::string clothes_type = "man";
+	std::string clothes_type = "worker";
 	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
 	
 	MainObject human;
-	human.SetFullRect(0, 250, 90, 180);
-	human.SetPicture(clothes_type, 12);
+	human.SetFullRect(0, 250, 120, 180);
+	human.SetPicture(clothes_type, 15);
+	human.SetSpeed(1);
 
-	//guard
-	Follower guard;
-	guard.SetFullRect(0, 400, 69, 110);
+	Follower guard_1;
+	guard_1.SetFullRect(-69, SCREEN_HEIGHT, 69, 110);
+	Follower guard_2;
+	guard_2.SetFullRect(-69, 200, 69, 110);
+
+
 	
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
@@ -113,6 +116,7 @@ int main(int arc, char*argv[]){
 
 
 	while (in_game){
+
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT){
 				in_game = false; in_last_stand = false; in_home = false; in_menu = false;
@@ -145,16 +149,12 @@ int main(int arc, char*argv[]){
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
 		
 		human.HandleMove();
-		guard.MoveFollower(human.GetRect(), green_light);
+		if (current_level >= 2)
+			guard_1.MoveFollower(human.GetRect(), green_light);
+		if (current_level == 3)
+			guard_2.MoveFollower(human.GetRect(), green_light);
 
-		if (human.GetRect().y + human.GetRect().h >= guard.GetRect().y + guard.GetRect().h){
-			guard.ShowFollower(g_screen);
-			human.ShowMainObject(g_screen);
-		}
-		else{
-			human.ShowMainObject(g_screen);
-			guard.ShowFollower(g_screen);
-		}
+		DisplayObjectsBasedOnLevel(current_level, human, guard_1, guard_2, g_screen);
 
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
@@ -162,13 +162,15 @@ int main(int arc, char*argv[]){
 		
 		bool win = false, lose = false; int used_time = 0; Uint32 time_die, time_die_check_1, time_die_check_2;
 
-
+		bool check_collision = false;
+		CheckCollisionBasedOnLevel(check_collision, current_level, guard_1, guard_2, human);
 
 		if ((human.GetRect().x < 940 && check_time_remaining < 0)
-		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)){
-			//lose = true;
-			//Mix_PlayChannel(-1, shot_sound, 0); 
-			//time_die = SDL_GetTicks();
+		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)
+		|| check_collision){
+			lose = true;
+			Mix_PlayChannel(-1, shot_sound, 0); 
+			time_die = SDL_GetTicks();
 		}
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0  && green_light == true){
 			win = true;
@@ -209,6 +211,9 @@ int main(int arc, char*argv[]){
 				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 				ShowDoll(green_light, green_doll, red_doll, g_screen);
 				human.Show(g_screen);
+				ShowFollowersBasedOnLevel(current_level, guard_1, guard_2, g_screen);
+				
+
 			if (time_die_check_1 - time_die >= 850) //850ms là thời gian từ lúc âm thanh kêu đến lúc bị ngã
 				break;
 			SDL_Flip(g_screen);
@@ -221,6 +226,8 @@ int main(int arc, char*argv[]){
 				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 				ShowDoll(green_light, green_doll, red_doll, g_screen);
 				SDLCommonFunc::ApplySurface(g_die, g_screen, human.GetRect().x, human.GetRect().y + HEIGHT_MAIN_OBJECT - WIDTH_MAIN_OBJECT);
+				ShowFollowersBasedOnLevel(current_level, guard_1, guard_2, g_screen);
+
 				time_die_check_2 = SDL_GetTicks();
 
 				if (time_die_check_2 - time_die_check_1 >= 3000){

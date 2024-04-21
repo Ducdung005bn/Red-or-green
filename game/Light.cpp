@@ -38,6 +38,70 @@ void PlaySong(Uint32 green_light_time, double green_light_time_array[], int n){
 	else if (green_light_time == green_light_time_array[2]*1000) Mix_PlayChannel(-1, song3, 0); 
 	else if (green_light_time == green_light_time_array[3]*1000) Mix_PlayChannel(-1, song4, 0); 
 }
+void DisplayObjectsBasedOnLevel(const int& current_level, MainObject &human, Follower &guard_1, Follower &guard_2, SDL_Surface* des) {
+    if (current_level == 1) {
+        human.ShowMainObject(des);
+    } else if (current_level == 2) {
+        if (human.GetRect().y + human.GetRect().h >= guard_1.GetRect().y + guard_1.GetRect().h) {
+            guard_1.ShowFollower(des);
+            human.ShowMainObject(des);
+        } else {
+            human.ShowMainObject(des);
+            guard_1.ShowFollower(des);
+        }
+    } else if (current_level == 3) {
+        int human_value = human.GetRect().y + human.GetRect().h;
+        int guard_1_value = guard_1.GetRect().y + guard_1.GetRect().h;
+        int guard_2_value = guard_2.GetRect().y + guard_2.GetRect().h;
+        int min_value = min(min(human_value, guard_1_value), guard_2_value);
+        if (min_value == human_value) {
+            human.ShowMainObject(des);
+            if (guard_2_value < guard_1_value) {
+                guard_2.ShowFollower(des);
+                guard_1.ShowFollower(des);
+            } else {
+                guard_1.ShowFollower(des);
+                guard_2.ShowFollower(des);
+            }
+        } else if (min_value == guard_1_value) {
+            guard_1.ShowFollower(des);
+            if (human_value < guard_2_value) {
+                human.ShowMainObject(des);
+                guard_2.ShowFollower(des);
+            } else {
+                guard_2.ShowFollower(des);
+                human.ShowMainObject(des);
+            }
+        } else {
+            guard_2.ShowFollower(des);
+            if (human_value < guard_1_value) {
+                human.ShowMainObject(des);
+                guard_1.ShowFollower(des);
+            } else {
+                guard_1.ShowFollower(des);
+                human.ShowMainObject(des);
+            }
+        }
+    }
+}
+void CheckCollisionBasedOnLevel(bool& check_collision, const int& current_level, const Follower& guard_1, const Follower& guard_2, const MainObject& human){
+    switch(current_level) {
+        case 2:
+            check_collision = guard_1.CheckCollisionWithHuman(human.GetRect());
+            break;
+        case 3:
+            check_collision = guard_1.CheckCollisionWithHuman(human.GetRect());
+            if (!check_collision) {
+                check_collision = guard_2.CheckCollisionWithHuman(human.GetRect());
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+
+
 
 
 

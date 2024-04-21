@@ -17,6 +17,7 @@ public:
 	void SetPicture(std::string clothes_type, int picture_number);
 	void SetLastPosition(); 
 	SDL_Rect GetLastPosition();
+	void SetSpeed(const int& x) {speed = x;}
 
 private:
 	int x_val_;
@@ -25,6 +26,7 @@ private:
 	std::string clothes_type; //tên đường dẫn tới tranh = clothes_type + picture_type
 	int picture_number; //số lượng tranh tạo animation
 	SDL_Rect last_position; 
+	int speed;
 };
 
 #endif

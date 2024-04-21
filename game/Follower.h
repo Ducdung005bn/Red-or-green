@@ -15,6 +15,7 @@ public:
 		previous_position.y = y;
 	}
 	SDL_Rect GetPreviousPosition(){return previous_position;}
+	bool CheckCollisionWithHuman(const SDL_Rect& human) const;
 
 
 private:
@@ -24,6 +25,9 @@ private:
 	int picture_number; //to create animation
 	double picture_type;
 };
+
+void ShowFollowersBasedOnLevel(const int& current_level, Follower& guard_1, Follower& guard_2, SDL_Surface* des);
+
 
 
 

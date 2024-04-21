@@ -12,7 +12,7 @@ Follower::Follower(){
 Follower::~Follower(){
 	//To do
 }
-void Follower::ShowFollower(SDL_Surface *des){
+void Follower::ShowFollower(SDL_Surface *des) {
 	double animation_speed = 0.25/4;
 
 	for (int i = 1; i <= picture_number; i++){
@@ -49,6 +49,7 @@ void Follower::MoveFollower(SDL_Rect human, bool green_light) {
         x_val_ = static_cast<int>(speed * unit_x);
         y_val_ = static_cast<int>(speed * unit_y);
 
+
         rect_.x += x_val_;
         rect_.y += y_val_;
 
@@ -64,4 +65,31 @@ void Follower::MoveFollower(SDL_Rect human, bool green_light) {
         x_val_ = 0;
         y_val_ = 0;
     }
+}
+bool Follower::CheckCollisionWithHuman(const SDL_Rect& human) const {
+	int follower_center_x = rect_.x + rect_.w / 2;
+    int follower_center_y = rect_.y + rect_.h;
+	int human_center_x = human.x + human.w / 2;    
+	int human_center_y = human.y + human.h;
+	
+	int dx = human_center_x - follower_center_x;
+	int dy = human_center_y - follower_center_y;
+	return (dx == 0 && dy == 0);
+}
+void ShowFollowersBasedOnLevel(const int& current_level, Follower& guard_1, Follower& guard_2, SDL_Surface* des){
+	switch(current_level){
+	case 2: guard_1.ShowFollower(des); break;
+	case 3: {
+		if (guard_1.GetRect().y > guard_2.GetRect().y){
+			guard_2.ShowFollower(des);
+			guard_1.ShowFollower(des);
+		}
+		else{
+			guard_1.ShowFollower(des);
+			guard_2.ShowFollower(des);
+		}
+		break;
+			}
+	default: break;
+	}
 }

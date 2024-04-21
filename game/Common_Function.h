@@ -24,7 +24,6 @@ static SDL_Surface *g_home = NULL;
 static SDL_Surface *g_cloud = NULL;
 static SDL_Surface *green_doll = NULL;
 static SDL_Surface *red_doll = NULL;
-static SDL_Surface *g_bomb = NULL;
 static SDL_Surface *g_win = NULL;
 static SDL_Surface *g_die = NULL; //nhân vật
 static SDL_Surface *g_die_announcement; 
