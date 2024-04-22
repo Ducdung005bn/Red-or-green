@@ -31,6 +31,7 @@ static SDL_Surface *g_how = NULL;
 static SDL_Surface *g_shop = NULL;
 static SDL_Surface *g_confirm_purchase = NULL;
 static SDL_Surface *g_need_to_upgrade = NULL;
+static SDL_Surface *g_explore_last_stand = NULL;
 
 static Mix_Chunk* song1 = NULL;
 static Mix_Chunk* song2 = NULL;
@@ -61,6 +62,8 @@ namespace SDLCommonFunc{
 	int ConfirmPurchase(SDL_Surface* des, TTF_Font* font, int index, int price);
 	bool MouseCheck(int mouse_x, int mouse_y, SDL_Rect input);
 	int ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font);
+	int ShowExploreLastStand(SDL_Surface* des, TTF_Font* font);
+
 
 }
 

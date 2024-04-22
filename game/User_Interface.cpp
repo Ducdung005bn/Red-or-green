@@ -391,7 +391,7 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 	int choose_to_buy = 0; //choose nothing
-	int price_array[4] = {0, 100, 200, 300};
+	int price_array[4] = {0, 20, 25, 30};
 
 	Text item_price[4];
 	for (int i = 0; i < 4; i++){
@@ -708,6 +708,62 @@ int SDLCommonFunc::ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font){
 						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
 						 return i;
 						}
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+		}
+		SDL_Flip(des);
+	}
+	return -1;
+}
+int SDLCommonFunc::ShowExploreLastStand(SDL_Surface* des, TTF_Font* font){
+	g_explore_last_stand = LoadImage("explore_last_stand.png");
+	if (g_explore_last_stand == NULL) return -1;
+	SDL_Rect item_position;
+	item_position.x = 10 ; item_position.y = 8 ; item_position.w = 86 ; item_position.h = 30 ;
+
+
+	Text text_explore_last_stand;
+	text_explore_last_stand.SetText("Return");
+	text_explore_last_stand.SetColor(Text::BLACK_TEXT);
+	text_explore_last_stand.SetRect(item_position.x, item_position.y);
+
+	bool selected = false;
+	int mouse_x = 0, mouse_y = 0;
+	SDL_Event m_event;
+
+	while(true){
+		SDLCommonFunc::ApplySurface(g_explore_last_stand, des, 0, 0);
+		text_explore_last_stand.CreateGameText(font, des);
+
+		while (SDL_PollEvent(&m_event)){
+
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, item_position)){
+							if (selected == false){
+								selected = true;
+								text_explore_last_stand.SetColor(Text::RED_TEXT);
+							}
+						}
+						else{
+							if (selected == true){
+								selected = false;
+								text_explore_last_stand.SetColor(Text::BLACK_TEXT);
+							}
+						}
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position))
+						 return 0;
 					break;
 				}
 			case SDL_KEYDOWN:

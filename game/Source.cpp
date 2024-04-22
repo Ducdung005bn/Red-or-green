@@ -43,8 +43,8 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 120;
-	int current_level = 1; 	int price_array[4] = {0, 100, 200, 300};
+	int total_coins = 0;
+	int current_level = 1; 	int price_array[4] = {0, 20, 25, 30};
 
 	while(in_menu){
 		if (through_menu == false){
@@ -66,7 +66,7 @@ int main(int arc, char*argv[]){
 			case 1: through_home = true; in_shop = true; break;
 			case 2: through_home = true; in_shop = false; in_instructions = false; in_game = true; break;
 			case 3: break;
-			case 4: break;
+			case 4: through_home = true; in_shop = false; in_instructions = false; in_game = false; in_last_stand = true; break;
 			}//kết thúc switch
 			}//kết thúc if
 			if (through_home == true){
@@ -86,7 +86,12 @@ int main(int arc, char*argv[]){
 				while(in_game){
 //Bắt đầu chơi
 	if (current_level == 4){
-		//To do
+		int number_explore_last_stand = SDLCommonFunc::ShowExploreLastStand(g_screen, g_font_text_4);
+		switch(number_explore_last_stand){
+		case 0: in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+		default: return 0;
+		}
+		break;
 	}
 	if (total_coins >= price_array[current_level]){
 		int need_to_upgrade_number = SDLCommonFunc::ShowNeedToUpgrade(g_screen, g_font_text_4);
@@ -97,9 +102,6 @@ int main(int arc, char*argv[]){
 		default: return 0;
 		}
 	}
-
-
-
 
     Uint32 time_value;
 	Uint32 game_start_time = SDL_GetTicks()+500; 
@@ -186,9 +188,9 @@ int main(int arc, char*argv[]){
 		if ((human.GetRect().x < 940 && check_time_remaining < 0)
 		|| ((human.GetRect().x != human.GetLastPosition().x || human.GetRect().y != human.GetLastPosition().y) && green_light == false)
 		|| check_collision){
-			//lose = true;
-			//Mix_PlayChannel(-1, shot_sound, 0); 
-			//time_die = SDL_GetTicks();
+			lose = true;
+			Mix_PlayChannel(-1, shot_sound, 0); 
+			time_die = SDL_GetTicks();
 		}
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0  && green_light == true){
 			win = true;
@@ -268,7 +270,58 @@ int main(int arc, char*argv[]){
 //Kết thúc chơi
 				}
 				while(in_last_stand){
-					//To do
+//Bắt đầu chơi
+	if (current_level < 4){
+		//To do
+	}
+    Uint32 time_value;
+	Uint32 game_start_time = SDL_GetTicks()+500; 
+	bool green_light = true; 
+	Uint32 start_green = game_start_time, start_red = -1; 
+	Uint32 red_light_time = 5500;         //mili giây
+	Uint32 game_duration = 45;       //thời gian cho phép (giây)
+	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
+	double cloud_movement = 0;
+
+
+	while (in_last_stand){
+		while (SDL_PollEvent(&g_event)){
+			if (g_event.type == SDL_QUIT)
+				return 0;
+			if (green_light == true && g_event.key.keysym.sym == SDLK_SPACE){ //bắt đầu đèn đỏ
+				green_light = false;
+				start_green = SDL_GetTicks() + red_light_time;
+				start_red = SDL_GetTicks();
+				Mix_PlayChannel(-1, look_sound, 0);
+				handle_green_light = false;
+			}
+		}
+		SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
+		//cloud_movement
+		CloudMovement(cloud_movement, g_cloud, g_screen);
+		time_value = SDL_GetTicks();
+		
+		if (!green_light && !handle_green_light && time_value - start_red >= red_light_time){ 
+            green_light = true; 
+            handle_green_light = true; 
+        }
+		ShowDoll(green_light, green_doll, red_doll, g_screen);
+		
+		//hiển thị Time Remaining
+		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
+		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+
+
+
+ 
+		if (SDL_Flip(g_screen) == -1) return 0;
+	}
+
+
+
+
+
+//Kết thúc chơi
 				}//kết thúc while(in_last_stand)
 
 			}//kết thúc if (through_home == true)
