@@ -3,6 +3,7 @@
 #include "Light.h"
 #include "Text.h"
 #include "Follower.h"
+#include "AutoPlayer.h"
 
 bool Init(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
@@ -24,8 +25,11 @@ bool Init(){
 	g_font_text_3 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 50);
 	g_font_text_4 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 25);
 	g_font_text_5 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 32);
+	g_font_text_7 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 15);
 
-	if (g_font_text_1 == NULL || g_font_text_2 == NULL || g_font_text_3 == NULL || g_font_text_4 == NULL || g_font_text_5 == NULL ) return false;
+	if (g_font_text_1 == NULL || g_font_text_2 == NULL || g_font_text_3 == NULL || g_font_text_4 == NULL || g_font_text_5 == NULL
+		|| g_font_text_7 == NULL) 
+		return false;
 
 	return true;
 }
@@ -43,7 +47,7 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 0;
+	int total_coins = 25;
 	int current_level = 1; 	int price_array[4] = {0, 20, 25, 30};
 
 	while(in_menu){
@@ -283,6 +287,22 @@ int main(int arc, char*argv[]){
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 	double cloud_movement = 0;
 
+	const int numb_autoplayers = 15;
+	AutoPlayer auto_player[numb_autoplayers];
+	for (int i = 0; i < numb_autoplayers; i++){
+		if (i%2 == 0)
+		auto_player[i].SetRect(0, 240 + i*20);
+		else
+		auto_player[i].SetRect(60, 240 + i*20);
+	}
+	Text player_name[numb_autoplayers];
+	for (int i = 0; i < numb_autoplayers; i++){
+		player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y);
+		player_name[i].SetColor(Text::GREEN_TEXT);
+		player_name[i].SetText("Player " + std::to_string(i+1));
+	}
+	
+
 
 	while (in_last_stand){
 		while (SDL_PollEvent(&g_event)){
@@ -306,11 +326,23 @@ int main(int arc, char*argv[]){
             handle_green_light = true; 
         }
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
+
+		for (int i = 0; i < numb_autoplayers; i++){
+			auto_player[i].MoveAutoPlayer();
+			auto_player[i].ShowAutoPlayer(g_screen);
+			player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y - 20);
+			player_name[i].CreateGameText(g_font_text_7, g_screen);
+		}
+
+
 		
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
 		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 
+		for (int i = 0; i < numb_autoplayers; i++){
+			//Check alive
+		}
 
 
  

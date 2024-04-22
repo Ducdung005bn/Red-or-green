@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AutoPlayer.cpp" />
     <ClCompile Include="Baseobject.cpp" />
     <ClCompile Include="Follower.cpp" />
     <ClCompile Include="Common_Function.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Baseobject.h" />
     <ClInclude Include="Follower.h" />
     <ClInclude Include="Common_Function.h" />
+    <ClInclude Include="AutoPlayer.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mainobject.h" />
     <ClInclude Include="Text.h" />

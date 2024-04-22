@@ -46,6 +46,7 @@ static TTF_Font* g_font_text_3 = NULL;
 static TTF_Font* g_font_text_4 = NULL;
 static TTF_Font* g_font_text_5 = NULL;
 static TTF_Font* g_font_text_6 = NULL;
+static TTF_Font* g_font_text_7 = NULL;
 
 
 static SDL_Event g_event; //xử lí các sự kiện
