@@ -16,6 +16,7 @@ bool Init(){
 	look_sound = Mix_LoadWAV("look_sound_new.wav");
 	shot_sound = Mix_LoadWAV("pistol-shot.wav");
 	walking_sound = Mix_LoadWAV("walking-on-floor.wav");
+
 	if (look_sound == NULL || shot_sound == NULL || walking_sound == NULL) 
 	return false;
 
@@ -65,6 +66,7 @@ int main(int arc, char*argv[]){
 		while(in_home){
 			if (through_home == false){
 			int home_number = SDLCommonFunc::ShowHome(total_coins, g_screen, g_font_text_5, g_font_text_4);
+
 			switch(home_number){
 			case -1: through_home = false; in_home = false; in_menu = false; break;
 			case 0: through_home = false; in_home = false; in_menu = true; through_menu = false; break;
@@ -203,7 +205,6 @@ int main(int arc, char*argv[]){
 			this_round_coins = 45 - used_time;
 		}
 
-
 		bool through_win = false;
 		while (win){
 			if (through_win == false){
@@ -238,7 +239,6 @@ int main(int arc, char*argv[]){
 				human.Show(g_screen);
 				ShowFollowersBasedOnLevel(current_level, guard_1, guard_2, g_screen);
 				
-
 			if (time_die_check_1 - time_die >= 850) //850ms là thời gian từ lúc âm thanh kêu đến lúc bị ngã
 				break;
 			SDL_Flip(g_screen);
@@ -290,12 +290,8 @@ int main(int arc, char*argv[]){
 
 	const int numb_autoplayers = 15;
 	AutoPlayer auto_player[numb_autoplayers];
-	for (int i = 0; i < numb_autoplayers; i++){
-		if (i%2 == 0)
-		auto_player[i].SetRect(0, 240 + i*20);
-		else
-		auto_player[i].SetRect(60, 240 + i*20);
-	}
+	SetRectForArrayOfAutoPlayers(auto_player, numb_autoplayers);
+
 	Text player_name[numb_autoplayers];
 	for (int i = 0; i < numb_autoplayers; i++){
 		player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y);
@@ -306,7 +302,7 @@ int main(int arc, char*argv[]){
 	int numb_guards_alive = numb_autoplayers;
 	int previous_numb_guards_alive = numb_autoplayers;
 	Text numb_guards_alive_text;
-	numb_guards_alive_text.SetRect(395, 40);
+	numb_guards_alive_text.SetRect(100, 40);
 	numb_guards_alive_text.SetColor(Text::RED_TEXT);
 	
 	bool any_guard_dead = false; 
@@ -314,7 +310,7 @@ int main(int arc, char*argv[]){
 	int red_light_count = 3; //số lần người chơi bật đèn đỏ
 
 	Text red_light_count_text;
-	red_light_count_text.SetRect(320, 70);
+	red_light_count_text.SetRect(100, 70);
 	red_light_count_text.SetColor(Text::RED_TEXT);
 
 	int channel = Mix_PlayChannel(-1, walking_sound, 0); 
@@ -351,16 +347,7 @@ int main(int arc, char*argv[]){
         }
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
 
-		for (int i = 0; i < numb_autoplayers; i++){
-			if(auto_player[i].GetAliveOrNot() == true){
-			auto_player[i].MoveAutoPlayer(any_guard_dead);
-			auto_player[i].ShowAutoPlayer(g_screen);
-			player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y - 20);
-			player_name[i].CreateGameText(g_font_text_7, g_screen);
-			}
-		}
-
-
+		HandleAutoPlayer(auto_player, player_name, numb_autoplayers, any_guard_dead, g_screen, g_font_text_7);
 	
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
@@ -380,23 +367,25 @@ int main(int arc, char*argv[]){
 			//check any_guard_win
 			if (auto_player[i].GetRect().x >= 950 && check_time_remaining >= 0  && green_light == true){
 				any_guard_win = true;
-				break;
 			}
 		}
 		if (numb_guards_alive < previous_numb_guards_alive && any_guard_dead == false){
 			any_guard_dead = true;
 		}
 
-		numb_guards_alive_text.SetText("The number of guards alive: " + std::to_string(numb_guards_alive));
+		numb_guards_alive_text.SetText("Guards alive: " + std::to_string(numb_guards_alive));
 		numb_guards_alive_text.CreateGameText(g_font_text_1, g_screen);
 
-		red_light_count_text.SetText("The number of times to turn the red light: " + std::to_string(red_light_count));
+		red_light_count_text.SetText("Times to turn the red light: " + std::to_string(red_light_count));
 		red_light_count_text.CreateGameText(g_font_text_1, g_screen);
 
 		bool win = false, lose = false;
 
-		if ((numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration)
-			|| (numb_guards_alive > 0 && check_time_remaining < 0 ) ){
+		//if ((numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration)
+		//	|| (numb_guards_alive > 0 && check_time_remaining < 0 ) ){
+		//	win = true;
+		//}
+		if (CheckWin(numb_guards_alive, check_time_remaining, game_duration)){
 			win = true;
 		}
 		if (any_guard_win){

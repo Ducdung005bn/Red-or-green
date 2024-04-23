@@ -3,6 +3,7 @@
 
 #include "Common_Function.h"
 #include "Baseobject.h"
+#include "Text.h"
 
 class AutoPlayer : public BaseObject{
 public:
@@ -25,6 +26,10 @@ private:
 	SDL_Rect last_position; 
 
 };
+
+void SetRectForArrayOfAutoPlayers(AutoPlayer auto_player[], const int& numb_autoplayers);
+void HandleAutoPlayer(AutoPlayer auto_player[], Text player_name[], const int& numb_autoplayers, const bool& any_guard_dead, SDL_Surface* des, TTF_Font* font);
+bool CheckWin(int numb_guards_alive, int check_time_remaining, int game_duration);
 
 
 #endif

@@ -33,6 +33,9 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 
 	int mouse_x = 0, mouse_y = 0;
 
+	click_sound = Mix_LoadWAV("click_sound.wav");
+	if (click_sound == NULL) return 1;
+
 	SDL_Event m_event;
 	while(true){
 		SDLCommonFunc::ApplySurface(g_poster, des, 0, 0);
@@ -53,6 +56,7 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 								selected[i] = 1;
 								text_menu[i].SetColor(Text::RED_TEXT);
 								current_font[i] = font2;
+								Mix_PlayChannel(-1, click_sound, 0);
 							}
 						}
 						else{
@@ -120,7 +124,19 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 
+	waiting_sound = Mix_LoadWAV("waiting_sound.wav");
+	if (waiting_sound == NULL) return -1;
+	int channel = Mix_PlayChannel(-1, waiting_sound, 0);
+
+	click_sound = Mix_LoadWAV("click_sound.wav");
+	if (click_sound == NULL) return 1;
+
 	while(true){
+		if (Mix_Playing(channel) == 0) {
+            // Nếu âm thanh đã phát xong, phát lại nó
+            Mix_PlayChannel(-1, waiting_sound, 0);
+        }
+
 		if (current_home_picture != last_home_picture){
 		switch(current_home_picture){
 		case 0: g_home = LoadImage("Home.png"); break;
@@ -159,6 +175,7 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 								selected[i] = true;
 								text_home[i].SetColor(Text::RED_TEXT);
 								if (i != 0) current_home_picture = i;
+								Mix_PlayChannel(-1, click_sound, 0);
 							}
 						}
 						else{
@@ -174,8 +191,11 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 			case SDL_MOUSEBUTTONDOWN:
 				{
                         for (int i = 0; i < home_item_number; i++){
-						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i])){
+							Mix_HaltChannel(channel);
+							SDL_Delay(1000);
 						 return i;
+						}
 						}
 					break;
 				}
@@ -410,6 +430,10 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	int owned_y = 220;
 	owned[0].SetRect(81, owned_y); owned[1].SetRect(350, owned_y); owned[2].SetRect(625, owned_y); owned[3].SetRect(907, owned_y);
 
+	buy_sound = Mix_LoadWAV("buy_sound.wav");
+	if (buy_sound == NULL) return 1;
+
+
 
 	while(true){
 				
@@ -558,6 +582,7 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 				if (yes){
 					total_coins -= price_array[current_level];
 					current_level += 1;
+					Mix_PlayChannel(-1, buy_sound, 0);
 					return 9; //quay về in_shop
 				}
 			}

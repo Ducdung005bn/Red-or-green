@@ -45,3 +45,25 @@ void AutoPlayer::SetLastPosition(){
 SDL_Rect AutoPlayer::GetLastPosition(){
 	return last_position;
 }
+void SetRectForArrayOfAutoPlayers(AutoPlayer auto_player[], const int& numb_autoplayers){
+	for (int i = 0; i < numb_autoplayers; i++){
+		if (i%2 == 0)
+		auto_player[i].SetRect(0, 240 + i*20);
+		else
+		auto_player[i].SetRect(60, 240 + i*20);
+	}
+}
+void HandleAutoPlayer(AutoPlayer auto_player[], Text player_name[], const int& numb_autoplayers, const bool& any_guard_dead, SDL_Surface* des, TTF_Font* font){
+	for (int i = 0; i < numb_autoplayers; i++){
+		if(auto_player[i].GetAliveOrNot() == true){
+			auto_player[i].MoveAutoPlayer(any_guard_dead);
+			auto_player[i].ShowAutoPlayer(des);
+			player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y - 20);
+			player_name[i].CreateGameText(font, des);
+			}
+		}
+}
+bool CheckWin(int numb_guards_alive, int check_time_remaining, int game_duration) {
+    return (numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration) ||
+           (numb_guards_alive > 0 && check_time_remaining < 0);
+}
