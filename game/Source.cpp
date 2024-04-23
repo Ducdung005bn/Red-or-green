@@ -301,7 +301,14 @@ int main(int arc, char*argv[]){
 		player_name[i].SetColor(Text::GREEN_TEXT);
 		player_name[i].SetText("Player " + std::to_string(i+1));
 	}
+
+	int numb_guards_alive = numb_autoplayers;
+	int previous_numb_guards_alive = numb_autoplayers;
+	Text numb_guards_alive_text;
+	numb_guards_alive_text.SetRect(400, 40);
+	numb_guards_alive_text.SetColor(Text::RED_TEXT);
 	
+	bool any_guard_dead = false; 
 
 
 	while (in_last_stand){
@@ -314,6 +321,9 @@ int main(int arc, char*argv[]){
 				start_red = SDL_GetTicks();
 				Mix_PlayChannel(-1, look_sound, 0);
 				handle_green_light = false;
+				for (int i = 0; i < numb_autoplayers; i++){
+					auto_player[i].SetLastPosition();
+				}
 			}
 		}
 		SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
@@ -321,31 +331,48 @@ int main(int arc, char*argv[]){
 		CloudMovement(cloud_movement, g_cloud, g_screen);
 		time_value = SDL_GetTicks();
 		
-		if (!green_light && !handle_green_light && time_value - start_red >= red_light_time){ 
+		if (!green_light && !handle_green_light && time_value - start_red >= red_light_time){  //bắt đầu đèn xanh
             green_light = true; 
             handle_green_light = true; 
+			any_guard_dead = false;
         }
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
 
 		for (int i = 0; i < numb_autoplayers; i++){
-			auto_player[i].MoveAutoPlayer();
+			if(auto_player[i].GetAliveOrNot() == true){
+			auto_player[i].MoveAutoPlayer(any_guard_dead);
 			auto_player[i].ShowAutoPlayer(g_screen);
 			player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y - 20);
 			player_name[i].CreateGameText(g_font_text_7, g_screen);
+			}
 		}
 
-
-		
+	
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
 		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 
+		numb_guards_alive = 0;
 		for (int i = 0; i < numb_autoplayers; i++){
 			//Check alive
+			if (auto_player[i].GetAliveOrNot() == true && green_light == false && auto_player[i].GetRect().x != auto_player[i].GetLastPosition().x){ //y khong thay doi
+				auto_player[i].SetNotAlive();
+				Mix_PlayChannel(-1, shot_sound, 0); 
+			}
+			//How many guards alive
+			if (auto_player[i].GetAliveOrNot() == true)
+				numb_guards_alive++;
 		}
+		if (numb_guards_alive < previous_numb_guards_alive && any_guard_dead == false){
+			any_guard_dead = true;
+		}
+
+		numb_guards_alive_text.SetText("The number of guards alive: " + std::to_string(numb_guards_alive));
+		numb_guards_alive_text.CreateGameText(g_font_text_1, g_screen);
 
 
  
+		previous_numb_guards_alive = numb_guards_alive;
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}
 

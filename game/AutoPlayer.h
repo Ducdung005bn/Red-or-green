@@ -9,8 +9,11 @@ public:
 	AutoPlayer();
 	~AutoPlayer();
 	void ShowAutoPlayer(SDL_Surface *des);
-	void MoveAutoPlayer();
+	void MoveAutoPlayer(bool any_guard_dead);
 	void SetNotAlive(){alive = false;}
+	bool GetAliveOrNot() {return alive;}
+	void SetLastPosition(); 
+	SDL_Rect GetLastPosition();
 
 
 private:
@@ -19,6 +22,8 @@ private:
 	int picture_number;
 	double picture_type;
 	bool alive;
+	SDL_Rect last_position; 
+
 };
 
 

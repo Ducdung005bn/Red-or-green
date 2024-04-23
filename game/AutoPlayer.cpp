@@ -6,6 +6,8 @@ AutoPlayer::AutoPlayer(){
 	picture_number = 7;
 	picture_type = 1;
 	alive = true;
+	last_position.x = 0;
+	last_position.y = 0;
 }
 AutoPlayer::~AutoPlayer(){
 	//To do
@@ -28,9 +30,18 @@ void AutoPlayer::ShowAutoPlayer(SDL_Surface *des) {
 	}
 }
 
-void AutoPlayer::MoveAutoPlayer(){
-	if (alive){
-	x_val_ = rand() % 2; //0, 1
-	rect_.x += x_val_;
+void AutoPlayer::MoveAutoPlayer(bool any_guard_dead){
+	if (!any_guard_dead){
+		if (alive){
+			x_val_ = rand() % 2; //0, 1
+			rect_.x += x_val_;
+		}
 	}
+}
+void AutoPlayer::SetLastPosition(){
+	last_position.x = rect_.x;
+	last_position.y = rect_.y;
+}
+SDL_Rect AutoPlayer::GetLastPosition(){
+	return last_position;
 }
