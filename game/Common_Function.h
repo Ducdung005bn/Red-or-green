@@ -39,6 +39,8 @@ static Mix_Chunk* song3 = NULL;
 static Mix_Chunk* song4 = NULL;
 static Mix_Chunk* look_sound = NULL;
 static Mix_Chunk* shot_sound = NULL;
+static Mix_Chunk* walking_sound = NULL;
+
 
 static TTF_Font* g_font_text_1 = NULL; 
 static TTF_Font* g_font_text_2 = NULL;

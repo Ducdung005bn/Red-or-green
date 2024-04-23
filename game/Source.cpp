@@ -15,7 +15,8 @@ bool Init(){
 
 	look_sound = Mix_LoadWAV("look_sound.wav");
 	shot_sound = Mix_LoadWAV("pistol-shot.wav");
-	if (look_sound == NULL || shot_sound == NULL) 
+	walking_sound = Mix_LoadWAV("walking-on-floor.wav");
+	if (look_sound == NULL || shot_sound == NULL || walking_sound == NULL) 
 	return false;
 
 	//Khởi tạo text
@@ -305,17 +306,26 @@ int main(int arc, char*argv[]){
 	int numb_guards_alive = numb_autoplayers;
 	int previous_numb_guards_alive = numb_autoplayers;
 	Text numb_guards_alive_text;
-	numb_guards_alive_text.SetRect(400, 40);
+	numb_guards_alive_text.SetRect(395, 40);
 	numb_guards_alive_text.SetColor(Text::RED_TEXT);
 	
 	bool any_guard_dead = false; 
+	int red_light_count = 3; //số lần người chơi bật đèn đỏ
 
+	Text red_light_count_text;
+	red_light_count_text.SetRect(320, 70);
+	red_light_count_text.SetColor(Text::RED_TEXT);
+
+	int channel = Mix_PlayChannel(-1, walking_sound, 0); 
 
 	while (in_last_stand){
+
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT)
 				return 0;
-			if (green_light == true && g_event.key.keysym.sym == SDLK_SPACE){ //bắt đầu đèn đỏ
+			if (green_light == true && g_event.key.keysym.sym == SDLK_SPACE && red_light_count > 0 ){ //bắt đầu đèn đỏ
+				Mix_HaltChannel(channel);
+				red_light_count -= 1;
 				green_light = false;
 				start_green = SDL_GetTicks() + red_light_time;
 				start_red = SDL_GetTicks();
@@ -335,6 +345,8 @@ int main(int arc, char*argv[]){
             green_light = true; 
             handle_green_light = true; 
 			any_guard_dead = false;
+			if (previous_numb_guards_alive > 0)
+				channel = Mix_PlayChannel(-1, walking_sound, 0);
         }
 		ShowDoll(green_light, green_doll, red_doll, g_screen);
 
@@ -369,6 +381,9 @@ int main(int arc, char*argv[]){
 
 		numb_guards_alive_text.SetText("The number of guards alive: " + std::to_string(numb_guards_alive));
 		numb_guards_alive_text.CreateGameText(g_font_text_1, g_screen);
+
+		red_light_count_text.SetText("The number of times to turn the red light: " + std::to_string(red_light_count));
+		red_light_count_text.CreateGameText(g_font_text_1, g_screen);
 
 
  
