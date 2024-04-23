@@ -13,7 +13,7 @@ bool Init(){
 	//Khởi tạo audio
 	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) return false;
 
-	look_sound = Mix_LoadWAV("look_sound.wav");
+	look_sound = Mix_LoadWAV("look_sound_new.wav");
 	shot_sound = Mix_LoadWAV("pistol-shot.wav");
 	walking_sound = Mix_LoadWAV("walking-on-floor.wav");
 	if (look_sound == NULL || shot_sound == NULL || walking_sound == NULL) 
@@ -310,6 +310,7 @@ int main(int arc, char*argv[]){
 	numb_guards_alive_text.SetColor(Text::RED_TEXT);
 	
 	bool any_guard_dead = false; 
+	bool any_guard_win = false;
 	int red_light_count = 3; //số lần người chơi bật đèn đỏ
 
 	Text red_light_count_text;
@@ -359,6 +360,7 @@ int main(int arc, char*argv[]){
 			}
 		}
 
+
 	
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
@@ -374,6 +376,12 @@ int main(int arc, char*argv[]){
 			//How many guards alive
 			if (auto_player[i].GetAliveOrNot() == true)
 				numb_guards_alive++;
+
+			//check any_guard_win
+			if (auto_player[i].GetRect().x >= 950 && check_time_remaining >= 0  && green_light == true){
+				any_guard_win = true;
+				break;
+			}
 		}
 		if (numb_guards_alive < previous_numb_guards_alive && any_guard_dead == false){
 			any_guard_dead = true;
@@ -384,6 +392,28 @@ int main(int arc, char*argv[]){
 
 		red_light_count_text.SetText("The number of times to turn the red light: " + std::to_string(red_light_count));
 		red_light_count_text.CreateGameText(g_font_text_1, g_screen);
+
+		bool win = false, lose = false;
+
+		if ((numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration)
+			|| (numb_guards_alive > 0 && check_time_remaining < 0 ) ){
+			win = true;
+		}
+		if (any_guard_win){
+			lose = true;
+		}
+
+		if (lose){
+			Mix_HaltChannel(channel);
+			int die_number = SDLCommonFunc::ShowDie(g_screen, g_font_text_4);
+			switch(die_number){
+			case 0: in_last_stand = false; in_home = true; through_home = false; break;
+			default: return 0;		
+			}
+		}
+		if (win){
+			//To do
+		}
 
 
  
