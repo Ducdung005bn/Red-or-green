@@ -54,13 +54,14 @@ static TTF_Font* g_font_text_4 = NULL;
 static TTF_Font* g_font_text_5 = NULL;
 static TTF_Font* g_font_text_6 = NULL;
 static TTF_Font* g_font_text_7 = NULL;
+static TTF_Font* g_font_text_8 = NULL;
 
 
 static SDL_Event g_event; //xử lí các sự kiện
 
 namespace SDLCommonFunc{
 	SDL_Surface* LoadImage(std::string file_path);
-	void ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y);
+	SDL_Rect ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y);
 	void CleanUp();
 	int ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 	int ShowHome(int current_level, int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);

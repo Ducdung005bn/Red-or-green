@@ -29,9 +29,11 @@ bool Init(){
 	g_font_text_4 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 25);
 	g_font_text_5 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 32);
 	g_font_text_7 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 15);
+	g_font_text_8 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 51);
+
 
 	if (g_font_text_1 == NULL || g_font_text_2 == NULL || g_font_text_3 == NULL || g_font_text_4 == NULL || g_font_text_5 == NULL
-		|| g_font_text_7 == NULL) 
+		|| g_font_text_7 == NULL || g_font_text_8 == NULL)  
 		return false;
 
 	return true;
@@ -289,7 +291,7 @@ int main(int arc, char*argv[]){
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
 	Uint32 red_light_time = 5500;         //mili giây
-	Uint32 game_duration = 10;       //thời gian cho phép (giây)
+	Uint32 game_duration = 3;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 	double cloud_movement = 0;
 	bool already_play_countdown = false; 
@@ -392,8 +394,9 @@ int main(int arc, char*argv[]){
 		}
 
 		if (win){
+			Mix_HaltChannel(channel); //dừng âm thanh walking
 			int start_time = SDL_GetTicks();
-			while (SDL_GetTicks() - start_time <= 5000){
+			while (SDL_GetTicks() - start_time <= 4000){
 				SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
 				CloudMovement(cloud_movement, g_cloud, g_screen);
 				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
@@ -409,8 +412,7 @@ int main(int arc, char*argv[]){
 				SDL_Flip(g_screen);
 			}
 			Mix_HaltChannel(-1); // Dừng tất cả các kênh âm thanh đang phát
-			int show_win_last_stand_number = SDLCommonFunc::ShowWinLastStand(g_screen, g_font_text_4);
-
+			int show_win_last_stand_number = SDLCommonFunc::ShowWinLastStand(g_screen, g_font_text_8);
 		}
 
 

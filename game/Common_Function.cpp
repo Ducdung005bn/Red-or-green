@@ -16,10 +16,11 @@ SDL_Surface* SDLCommonFunc::LoadImage(std::string file_path){
   return optimize_image;
 }
 
-void SDLCommonFunc::ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y){ //đặt nguồn -> đích ở vị trí x, y
+SDL_Rect SDLCommonFunc::ApplySurface(SDL_Surface* src, SDL_Surface* des, int x, int y){ //đặt nguồn -> đích ở vị trí x, y
   SDL_Rect offset;
   offset.x = x; offset.y = y;
   SDL_BlitSurface(src, NULL, des, &offset);
+  return offset;
 }
 
 void SDLCommonFunc::CleanUp(){ //giải phóng vùng nhớ

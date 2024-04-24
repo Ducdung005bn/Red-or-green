@@ -1,4 +1,5 @@
 ﻿#include "User_Interface.h"
+
 bool SDLCommonFunc::MouseCheck(int mouse_x, int mouse_y, SDL_Rect input){
 	if (mouse_x >= input.x
 	 && mouse_y >= input.y
@@ -866,19 +867,51 @@ int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
 	SDL_Surface *g_frame_23 = SDLCommonFunc::LoadImage("frame_23.png");
 	SDL_Surface *g_frame_24 = SDLCommonFunc::LoadImage("frame_24.png");
 
+	g_font_text_4 = TTF_OpenFont("OpenSans-ExtraBold.TTF", 25);
+
+
 	if (g_frame_1 == NULL || g_frame_2 == NULL || g_frame_3 == NULL || g_frame_4 == NULL || g_frame_5 == NULL || g_frame_6 == NULL 
 		|| g_frame_7 == NULL || g_frame_8 == NULL || g_frame_9 == NULL || g_frame_10 == NULL || g_frame_11 == NULL
 		|| g_frame_12 == NULL || g_frame_13 == NULL || g_frame_14 == NULL || g_frame_15 == NULL || g_frame_16 == NULL
 		|| g_frame_17 == NULL || g_frame_18 == NULL || g_frame_19 == NULL || g_frame_20 == NULL || g_frame_21 == NULL 
-		|| g_frame_22 == NULL || g_frame_23 == NULL || g_frame_24 == NULL)
+		|| g_frame_22 == NULL || g_frame_23 == NULL || g_frame_24 == NULL || g_font_text_4 == NULL)
 		return -1;
 
-	//Mix_Chunk* win_sound = NULL;
-	//win_sound = Mix_LoadWAV("win_sound.wav");
-	//if (win_sound == NULL) return -1;
-	//int channel = Mix_PlayChannel(-1, win_sound, 0);
+	Mix_Chunk* win_sound = NULL;
+	win_sound = Mix_LoadWAV("money_fall.wav");
+	if (win_sound == NULL) return -1;
+	int channel = Mix_PlayChannel(-1, win_sound, 0);
+	
+	std::string congratulationsText = "Congratulations on cracking this game!";
+	std::vector<Text> congratulationsArray;
+	for (char& c : congratulationsText) {
+		Text text;
+		text.SetText(std::string(1, c));
+		text.SetColor(Text::RED_TEXT); // Đặt màu cho văn bản
+		congratulationsArray.push_back(text);
+	}
+	int charactersToShow = 0;
+	Uint32 characterDelayTime = 150;
+	Uint32 lastTime = SDL_GetTicks();
 
-	while(true){
+	Text text_return;
+	text_return.SetText("Return");
+	text_return.SetColor(Text::WHITE_TEXT);
+	text_return.SetRect(10, 8);
+
+	bool selected = false;
+	int mouse_x = 0, mouse_y = 0;
+	SDL_Event m_event;
+
+
+
+while(true){
+	Uint32 currentTime = SDL_GetTicks();
+
+	if (Mix_Playing(channel) == 0) {
+            // Nếu âm thanh đã phát xong, phát lại nó
+            Mix_PlayChannel(-1, win_sound, 0);
+        }
 	// Nếu không phải là reverse animation
     if (!reverse_animation) {
         picture_type += animation_speed;
@@ -924,9 +957,59 @@ int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
 		default: return -1;
 		}
 	}
-	
-	SDL_Flip(des);
+	text_return.CreateGameText(g_font_text_4, des);
+
+	int textX = 30;
+	for (int i = 0; i < charactersToShow; i++){
+		congratulationsArray[i].SetRect(textX, 300);
+        congratulationsArray[i].CreateGameText(font, des);
+        textX += congratulationsArray[i].GetRect().w;
+		SDL_Flip(des);
 	}
+
+	if (currentTime - lastTime > characterDelayTime){
+		lastTime = currentTime;
+		if (charactersToShow < congratulationsText.size())
+		charactersToShow ++;
+		else 
+		charactersToShow = 0;
+	}
+
+	while (SDL_PollEvent(&m_event)){
+
+			switch(m_event.type){
+			case SDL_QUIT: return -1;
+			case SDL_MOUSEMOTION:
+				{
+						if (MouseCheck(m_event.motion.x, m_event.motion.y, text_return.GetRect())){
+							if (selected == false){
+								selected = true;
+								text_return.SetColor(Text::RED_TEXT);
+							}
+						}
+						else{
+							if (selected == true){
+								selected = false;
+								text_return.SetColor(Text::WHITE_TEXT);
+							}
+						}
+					break;
+				}
+			case SDL_MOUSEBUTTONDOWN:
+				{
+						if (MouseCheck(m_event.button.x, m_event.button.y,  text_return.GetRect()))
+						 return 0;
+					break;
+				}
+			case SDL_KEYDOWN:
+				if (m_event.key.keysym.sym == SDLK_ESCAPE)
+					return -1;
+			default: break;
+			}
+		}
+
+	SDL_Flip(des);
+}
 }
 
 
