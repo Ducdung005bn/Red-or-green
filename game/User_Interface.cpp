@@ -128,10 +128,12 @@ int SDLCommonFunc::ShowHome(int current_level, int total_coins, SDL_Surface* des
 	int current_home_picture = 0, last_home_picture = 0;
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
+	Mix_HaltChannel(-1); // Dừng tất cả các kênh âm thanh đang phát
 
-	waiting_sound = Mix_LoadWAV("waiting_sound.wav");
-	if (waiting_sound == NULL) return -1;
-	int channel = Mix_PlayChannel(-1, waiting_sound, 0);
+
+	home_sound = Mix_LoadWAV("home_sound.wav");
+	if (home_sound == NULL) return -1;
+	int channel = Mix_PlayChannel(-1, home_sound, 0);
 
 	click_sound = Mix_LoadWAV("click_sound.wav");
 	if (click_sound == NULL) return 1;
@@ -139,7 +141,7 @@ int SDLCommonFunc::ShowHome(int current_level, int total_coins, SDL_Surface* des
 	while(true){
 		if (Mix_Playing(channel) == 0) {
             // Nếu âm thanh đã phát xong, phát lại nó
-            Mix_PlayChannel(-1, waiting_sound, 0);
+            Mix_PlayChannel(-1, home_sound, 0);
         }
 
 		if (current_home_picture != last_home_picture){
@@ -208,7 +210,7 @@ int SDLCommonFunc::ShowHome(int current_level, int total_coins, SDL_Surface* des
 									text_coins.CreateGameText(font1, des);
 									text_buy_doll_clothes.CreateGameText(font2, des);
 									if (Mix_Playing(channel) == 0) {
-										Mix_PlayChannel(-1, waiting_sound, 0);
+										Mix_PlayChannel(-1, home_sound, 0);
 									}
 									SDL_Flip(des);
 								}
@@ -458,9 +460,16 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	click_sound = Mix_LoadWAV("click_sound.wav");
 	if (click_sound == NULL) return 1;
 
+	shop_sound = Mix_LoadWAV("shop_sound.wav");
+	if (shop_sound == NULL) return -1;
+	int channel = Mix_PlayChannel(-1, shop_sound, 0);
+
 
 
 	while(true){
+		if (Mix_Playing(channel) == 0) 
+            Mix_PlayChannel(-1, shop_sound, 0);
+        
 				
 		SDLCommonFunc::ApplySurface(g_shop, des, 0, 0);
 		for (int i = 0; i < shop_item_number; i++){
@@ -579,7 +588,7 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 			    int start_time = SDL_GetTicks(); 
 			    while (SDL_GetTicks() - start_time <= 2000){ 
 				SDLCommonFunc::ApplySurface(g_shop, des, 0, 0); 
-				    for (int i = 0; i < shop_item_number; i++) {
+				for (int i = 0; i < shop_item_number; i++) {
 					    if (i != choose_to_buy)  
 							text_shop[i].CreateGameText(font1, des);
 				}
@@ -846,6 +855,11 @@ int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
 	if (g_frame_1 == NULL || g_frame_2 == NULL || g_frame_3 == NULL || g_frame_4 == NULL || g_frame_5 == NULL || g_frame_6 == NULL 
 		|| g_frame_7 == NULL || g_frame_8 == NULL || g_frame_9 == NULL || g_frame_10 == NULL || g_frame_11 == NULL)
 		return -1;
+
+	//Mix_Chunk* win_sound = NULL;
+	//win_sound = Mix_LoadWAV("win_sound.wav");
+	//if (win_sound == NULL) return -1;
+	//int channel = Mix_PlayChannel(-1, win_sound, 0);
 
 	while(true){
 	// Nếu không phải là reverse animation

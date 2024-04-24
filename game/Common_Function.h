@@ -40,7 +40,8 @@ static Mix_Chunk* song4 = NULL;
 static Mix_Chunk* look_sound = NULL;
 static Mix_Chunk* shot_sound = NULL;
 static Mix_Chunk* walking_sound = NULL;
-static Mix_Chunk* waiting_sound = NULL;
+static Mix_Chunk* shop_sound = NULL;
+static Mix_Chunk* home_sound = NULL;
 static Mix_Chunk* click_sound = NULL;
 static Mix_Chunk* buy_sound = NULL;
 

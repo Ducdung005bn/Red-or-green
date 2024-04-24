@@ -383,9 +383,9 @@ int main(int arc, char*argv[]){
 
 		win = true;
 		if (win){
+			Mix_HaltChannel(-1); // Dừng tất cả các kênh âm thanh đang phát
 			int show_win_last_stand_number = SDLCommonFunc::ShowWinLastStand(g_screen, g_font_text_4);
-			if (show_win_last_stand_number == -1)
-				return 0;
+
 		}
 
 
