@@ -265,7 +265,7 @@ int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des
 	else if (this_round_coins == 1)
 		text_coins.SetText(std::to_string(this_round_coins) + "    coin");
 	else
-	text_coins.SetText(std::to_string(this_round_coins) + "  coins");
+		text_coins.SetText(std::to_string(this_round_coins) + "  coins");
 
 	text_coins.SetColor(Text::RED_TEXT);
 	text_coins.SetRect(513, 239);
@@ -274,6 +274,12 @@ int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des
 		text_win[i].SetColor(Text::NAVY_TEXT);
 		text_win[i].SetRect(item_position[i].x, item_position[i].y);
 	}
+
+	Text cannot_play_1, cannot_play_2; //khi this_round_coin == 0 mà vẫn bấm vào YES
+	cannot_play_1.SetRect(323, 280); cannot_play_2.SetRect(373, 310);
+	cannot_play_1.SetColor(Text::NAVY_TEXT); cannot_play_2.SetColor(Text::NAVY_TEXT);
+	cannot_play_1.SetText("You need to have at least one coin");
+	cannot_play_2.SetText("to play the game of chance.");
 
 	bool selected[win_item_number] = {0};
 	int mouse_x = 0, mouse_y = 0;
@@ -320,10 +326,26 @@ int SDLCommonFunc::ShowWin(int this_round_coins, int used_time, SDL_Surface* des
 				}
 			case SDL_MOUSEBUTTONDOWN:
 				{
-                        for (int i = 0; i < win_item_number-1 ; i++){ //bấm chuột chỉ nhận return (0) và yes (1). 
-						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i]))
-						 return i;
-						}
+					for (int i = 0; i < win_item_number-1 ; i++){ //bấm chuột chỉ nhận return (0) và yes (1). 
+						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i])){
+							if (i == 1 && this_round_coins == 0){
+								int start_time = SDL_GetTicks();
+								while(SDL_GetTicks() - start_time <= 2000){
+									SDLCommonFunc::ApplySurface(g_win, des, 233, 119);
+									for (int i = 0; i < win_item_number; i++){
+										text_win[i].CreateGameText(font, des);
+									}
+									text_time.CreateGameText(font, des);
+									text_coins.CreateGameText(font, des);
+									cannot_play_1.CreateGameText(font, des);
+									cannot_play_2.CreateGameText(font, des);
+									SDL_Flip(des);
+								}
+								break;
+							}
+							return i;
+					    }
+					}
 					break;
 				}
 			case SDL_KEYDOWN:
@@ -1010,6 +1032,9 @@ while(true){
 
 	SDL_Flip(des);
 }
+}
+int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+	return 0;
 }
 
 

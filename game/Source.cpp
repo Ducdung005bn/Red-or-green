@@ -53,7 +53,7 @@ int main(int arc, char*argv[]){
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
 	int total_coins = 0;
-	int current_level = 4; 	int price_array[4] = {0, 20, 25, 30};
+	int current_level = 1; 	int price_array[4] = {0, 20, 25, 30};
 
 	while(in_menu){
 		if (through_menu == false){
@@ -118,7 +118,7 @@ int main(int arc, char*argv[]){
 
 	MainObject human;
 	human.SetFullRect(0, 250, 120, 180);
-	human.SetSpeed(1);
+	human.SetSpeed(10);
 
 	std::string clothes_type;
 	int number_of_frames;
@@ -138,7 +138,7 @@ int main(int arc, char*argv[]){
 	Uint32 start_green = game_start_time, start_red = -1; 
 	Uint32 green_light_time;         //mili giây
 	double green_light_time_array[4] = {1.5, 1.75, 2.275, 2.85};
-	Uint32 game_duration = 45;       //thời gian cho phép (giây)
+	Uint32 game_duration = 10;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 
 	int this_round_coins = 0;
@@ -211,7 +211,7 @@ int main(int arc, char*argv[]){
 		if (human.GetRect().x >= 940 && check_time_remaining >= 0  && green_light == true){
 			win = true;
 			used_time = time_value/1000-game_start_time/1000;
-			this_round_coins = 45 - used_time;
+			this_round_coins = game_duration - used_time;
 		}
 
 		bool through_win = false;
@@ -291,7 +291,7 @@ int main(int arc, char*argv[]){
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
 	Uint32 red_light_time = 5500;         //mili giây
-	Uint32 game_duration = 3;       //thời gian cho phép (giây)
+	Uint32 game_duration = 45;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 	double cloud_movement = 0;
 	bool already_play_countdown = false; 
@@ -315,7 +315,7 @@ int main(int arc, char*argv[]){
 	
 	bool any_guard_dead = false; 
 	bool any_guard_win = false;
-	int red_light_count = 8; //số lần người chơi bật đèn đỏ
+	int red_light_count = 3; //số lần người chơi bật đèn đỏ
 
 	Text red_light_count_text;
 	red_light_count_text.SetRect(100, 70);
@@ -413,15 +413,15 @@ int main(int arc, char*argv[]){
 			}
 			Mix_HaltChannel(-1); // Dừng tất cả các kênh âm thanh đang phát
 			int show_win_last_stand_number = SDLCommonFunc::ShowWinLastStand(g_screen, g_font_text_8);
+			switch(show_win_last_stand_number){
+			case -1: return 0;
+			case 0: win = false; in_last_stand = false; in_home = true; through_home = false; break; 
+			}
 		}
 
-
- 
 		previous_numb_guards_alive = numb_guards_alive;
 		if (SDL_Flip(g_screen) == -1) return 0;
 	}
-
-
 
 
 

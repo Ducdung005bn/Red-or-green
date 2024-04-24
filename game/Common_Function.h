@@ -73,6 +73,7 @@ namespace SDLCommonFunc{
 	int ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font);
 	int ShowExploreLastStand(SDL_Surface* des, TTF_Font* font);
 	int ShowWinLastStand(SDL_Surface* des, TTF_Font* font);
+	int ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2);
 
 
 }
