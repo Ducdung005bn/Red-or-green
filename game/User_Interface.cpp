@@ -89,7 +89,7 @@ int SDLCommonFunc::ShowMenu(SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 	return 1;
 }
 
-int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+int SDLCommonFunc::ShowHome(int current_level, int total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
 
 	g_home = LoadImage("home.png");
 	if (g_home == NULL) return -1;
@@ -117,6 +117,11 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 	text_coins.SetText(std::to_string(total_coins));
 	text_coins.SetColor(Text::YELLOW_TEXT);
 	text_coins.SetRect(950, 35);
+
+	Text text_buy_doll_clothes;
+	text_buy_doll_clothes.SetText("You haven't got enough ability to join THE LAST STAND.");
+	text_buy_doll_clothes.SetColor(Text::NAVY_TEXT);
+	text_buy_doll_clothes.SetRect(200, 0);
 
 
 	bool selected[home_item_number] = {0};
@@ -192,6 +197,23 @@ int SDLCommonFunc::ShowHome(int total_coins, SDL_Surface* des, TTF_Font* font1, 
 				{
                         for (int i = 0; i < home_item_number; i++){
 						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i])){
+							if (i == 4 && current_level < 4){
+								int start_time = SDL_GetTicks();
+								while(SDL_GetTicks() - start_time <= 2000){
+									SDLCommonFunc::ApplySurface(g_home, des, 0, 0);
+									for (int i = 1; i < home_item_number; i++){
+										text_home[i].CreateGameText(font1, des);
+									}
+									text_home[0].CreateGameText(font2, des);
+									text_coins.CreateGameText(font1, des);
+									text_buy_doll_clothes.CreateGameText(font2, des);
+									if (Mix_Playing(channel) == 0) {
+										Mix_PlayChannel(-1, waiting_sound, 0);
+									}
+									SDL_Flip(des);
+								}
+								break;
+							}
 							Mix_HaltChannel(channel);
 							SDL_Delay(1000);
 						 return i;
@@ -433,6 +455,9 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	buy_sound = Mix_LoadWAV("buy_sound.wav");
 	if (buy_sound == NULL) return 1;
 
+	click_sound = Mix_LoadWAV("click_sound.wav");
+	if (click_sound == NULL) return 1;
+
 
 
 	while(true){
@@ -478,6 +503,7 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 						return 0;
 						for (int i = 1; i <=4; i++){
 						if (MouseCheck(m_event.button.x, m_event.button.y, item_position[i])){
+							Mix_PlayChannel(-1, click_sound, 0);
 							choose_to_buy = i; //Bấm chọn mua cái thứ 1, 2, 3 hay 4.
 						}
 						}
@@ -800,6 +826,63 @@ int SDLCommonFunc::ShowExploreLastStand(SDL_Surface* des, TTF_Font* font){
 		SDL_Flip(des);
 	}
 	return -1;
+}
+int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
+	double animation_speed = 0.25/32;
+	int picture_number = 11;
+	double picture_type = 1;
+	bool reverse_animation = false;
+	SDL_Surface *g_frame_1 = SDLCommonFunc::LoadImage("frame_1.png");
+	SDL_Surface *g_frame_2 = SDLCommonFunc::LoadImage("frame_2.png");
+	SDL_Surface *g_frame_3 = SDLCommonFunc::LoadImage("frame_3.png");
+	SDL_Surface *g_frame_4 = SDLCommonFunc::LoadImage("frame_4.png");
+	SDL_Surface *g_frame_5 = SDLCommonFunc::LoadImage("frame_5.png");
+	SDL_Surface *g_frame_6 = SDLCommonFunc::LoadImage("frame_6.png");
+	SDL_Surface *g_frame_7 = SDLCommonFunc::LoadImage("frame_7.png");
+	SDL_Surface *g_frame_8 = SDLCommonFunc::LoadImage("frame_8.png");
+	SDL_Surface *g_frame_9 = SDLCommonFunc::LoadImage("frame_9.png");
+	SDL_Surface *g_frame_10 = SDLCommonFunc::LoadImage("frame_10.png");
+	SDL_Surface *g_frame_11 = SDLCommonFunc::LoadImage("frame_11.png");
+	if (g_frame_1 == NULL || g_frame_2 == NULL || g_frame_3 == NULL || g_frame_4 == NULL || g_frame_5 == NULL || g_frame_6 == NULL 
+		|| g_frame_7 == NULL || g_frame_8 == NULL || g_frame_9 == NULL || g_frame_10 == NULL || g_frame_11 == NULL)
+		return -1;
+
+	while(true){
+	// Nếu không phải là reverse animation
+    if (!reverse_animation) {
+        picture_type += animation_speed;
+        if (picture_type > picture_number) {
+            picture_type = picture_number - 1; 
+            reverse_animation = true;
+        }
+    }
+    // Nếu đang trong reverse animation
+    else {
+		picture_type -= animation_speed;
+        if (picture_type < 1) {
+            picture_type = 2; 
+            reverse_animation = false;
+        }
+    }
+	if (picture_type == (int)picture_type){
+		switch((int)picture_type){
+		case 1: SDLCommonFunc::ApplySurface(g_frame_1, des, 0, 0); break;
+		case 2: SDLCommonFunc::ApplySurface(g_frame_2, des, 0, 0); break;
+		case 3: SDLCommonFunc::ApplySurface(g_frame_3, des, 0, 0); break;
+		case 4: SDLCommonFunc::ApplySurface(g_frame_4, des, 0, 0); break;
+		case 5: SDLCommonFunc::ApplySurface(g_frame_5, des, 0, 0); break;
+		case 6: SDLCommonFunc::ApplySurface(g_frame_6, des, 0, 0); break;
+		case 7: SDLCommonFunc::ApplySurface(g_frame_7, des, 0, 0); break;
+		case 8: SDLCommonFunc::ApplySurface(g_frame_8, des, 0, 0); break;
+		case 9: SDLCommonFunc::ApplySurface(g_frame_9, des, 0, 0); break;
+		case 10: SDLCommonFunc::ApplySurface(g_frame_10, des, 0, 0); break;
+		case 11: SDLCommonFunc::ApplySurface(g_frame_11, des, 0, 0); break;
+		default: return -1;
+		}
+	}
+	
+	SDL_Flip(des);
+	}
 }
 
 

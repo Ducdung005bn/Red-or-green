@@ -49,8 +49,8 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 25;
-	int current_level = 1; 	int price_array[4] = {0, 20, 25, 30};
+	int total_coins = 200;
+	int current_level = 4; 	int price_array[4] = {0, 20, 25, 30};
 
 	while(in_menu){
 		if (through_menu == false){
@@ -65,7 +65,7 @@ int main(int arc, char*argv[]){
 
 		while(in_home){
 			if (through_home == false){
-			int home_number = SDLCommonFunc::ShowHome(total_coins, g_screen, g_font_text_5, g_font_text_4);
+			int home_number = SDLCommonFunc::ShowHome(current_level, total_coins, g_screen, g_font_text_5, g_font_text_4);
 
 			switch(home_number){
 			case -1: through_home = false; in_home = false; in_menu = false; break;
@@ -115,7 +115,7 @@ int main(int arc, char*argv[]){
 
 	MainObject human;
 	human.SetFullRect(0, 250, 120, 180);
-	human.SetSpeed(1);
+	human.SetSpeed(5);
 
 	std::string clothes_type;
 	int number_of_frames;
@@ -276,9 +276,7 @@ int main(int arc, char*argv[]){
 				}
 				while(in_last_stand){
 //Bắt đầu chơi
-	if (current_level < 4){
-		//To do
-	}
+
     Uint32 time_value;
 	Uint32 game_start_time = SDL_GetTicks()+500; 
 	bool green_light = true; 
@@ -307,16 +305,16 @@ int main(int arc, char*argv[]){
 	
 	bool any_guard_dead = false; 
 	bool any_guard_win = false;
-	int red_light_count = 3; //số lần người chơi bật đèn đỏ
+	int red_light_count = 8; //số lần người chơi bật đèn đỏ
 
 	Text red_light_count_text;
 	red_light_count_text.SetRect(100, 70);
 	red_light_count_text.SetColor(Text::RED_TEXT);
 
 	int channel = Mix_PlayChannel(-1, walking_sound, 0); 
+	bool play_shot_sound = false;
 
 	while (in_last_stand){
-
 		while (SDL_PollEvent(&g_event)){
 			if (g_event.type == SDL_QUIT)
 				return 0;
@@ -353,22 +351,12 @@ int main(int arc, char*argv[]){
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
 		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
 
-		numb_guards_alive = 0;
-		for (int i = 0; i < numb_autoplayers; i++){
-			//Check alive
-			if (auto_player[i].GetAliveOrNot() == true && green_light == false && auto_player[i].GetRect().x != auto_player[i].GetLastPosition().x){ //y khong thay doi
-				auto_player[i].SetNotAlive();
-				Mix_PlayChannel(-1, shot_sound, 0); 
-			}
-			//How many guards alive
-			if (auto_player[i].GetAliveOrNot() == true)
-				numb_guards_alive++;
-
-			//check any_guard_win
-			if (auto_player[i].GetRect().x >= 950 && check_time_remaining >= 0  && green_light == true){
-				any_guard_win = true;
-			}
+		UpdateGuardStatus(auto_player, numb_guards_alive, any_guard_win, check_time_remaining, green_light, numb_autoplayers, play_shot_sound);
+		if (play_shot_sound){
+			Mix_PlayChannel(-1, shot_sound, 0); 
+			play_shot_sound = false;
 		}
+
 		if (numb_guards_alive < previous_numb_guards_alive && any_guard_dead == false){
 			any_guard_dead = true;
 		}
@@ -380,17 +368,7 @@ int main(int arc, char*argv[]){
 		red_light_count_text.CreateGameText(g_font_text_1, g_screen);
 
 		bool win = false, lose = false;
-
-		//if ((numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration)
-		//	|| (numb_guards_alive > 0 && check_time_remaining < 0 ) ){
-		//	win = true;
-		//}
-		if (CheckWin(numb_guards_alive, check_time_remaining, game_duration)){
-			win = true;
-		}
-		if (any_guard_win){
-			lose = true;
-		}
+		CheckWinLose(numb_guards_alive, check_time_remaining, game_duration, any_guard_win, win, lose);
 
 		if (lose){
 			Mix_HaltChannel(channel);
@@ -400,8 +378,14 @@ int main(int arc, char*argv[]){
 			default: return 0;		
 			}
 		}
+
+
+
+		win = true;
 		if (win){
-			//To do
+			int show_win_last_stand_number = SDLCommonFunc::ShowWinLastStand(g_screen, g_font_text_4);
+			if (show_win_last_stand_number == -1)
+				return 0;
 		}
 
 

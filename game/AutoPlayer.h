@@ -29,7 +29,8 @@ private:
 
 void SetRectForArrayOfAutoPlayers(AutoPlayer auto_player[], const int& numb_autoplayers);
 void HandleAutoPlayer(AutoPlayer auto_player[], Text player_name[], const int& numb_autoplayers, const bool& any_guard_dead, SDL_Surface* des, TTF_Font* font);
-bool CheckWin(int numb_guards_alive, int check_time_remaining, int game_duration);
-
+void CheckWinLose(int numb_guards_alive, int check_time_remaining, int game_duration, bool any_guard_win, bool& win, bool& lose);
+void UpdateGuardStatus(AutoPlayer auto_player[], int& numb_guards_alive, bool& any_guard_win, int check_time_remaining, bool green_light, int numb_autoplayers, bool& play_shot_sound);
 
 #endif
+

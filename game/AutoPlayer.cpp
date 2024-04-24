@@ -63,7 +63,24 @@ void HandleAutoPlayer(AutoPlayer auto_player[], Text player_name[], const int& n
 			}
 		}
 }
-bool CheckWin(int numb_guards_alive, int check_time_remaining, int game_duration) {
-    return (numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration) ||
-           (numb_guards_alive > 0 && check_time_remaining < 0);
+void CheckWinLose(int numb_guards_alive, int check_time_remaining, int game_duration, bool any_guard_win, bool& win, bool& lose) {
+    if ((numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration) || (numb_guards_alive > 0 && check_time_remaining < 0))
+		win = true;
+	if (any_guard_win)
+		lose = true;
+}
+void UpdateGuardStatus(AutoPlayer auto_player[], int& numb_guards_alive, bool& any_guard_win, int check_time_remaining, bool green_light, int numb_autoplayers, bool& play_shot_sound) {
+	numb_guards_alive = 0;
+    for (int i = 0; i < numb_autoplayers; i++) {
+        if (auto_player[i].GetAliveOrNot() && !green_light && auto_player[i].GetRect().x != auto_player[i].GetLastPosition().x) {
+            auto_player[i].SetNotAlive();
+			play_shot_sound = true;
+        }
+        if (auto_player[i].GetAliveOrNot()) {
+            numb_guards_alive++;
+        }
+        if (auto_player[i].GetRect().x >= 950 && check_time_remaining >= 0 && green_light) {
+            any_guard_win = true;
+        }
+    }
 }

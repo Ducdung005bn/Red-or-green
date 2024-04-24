@@ -69,3 +69,4 @@ void MainObject::SetLastPosition(){
 SDL_Rect MainObject::GetLastPosition(){
 	return last_position;
 }
+
