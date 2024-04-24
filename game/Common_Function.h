@@ -44,6 +44,7 @@ static Mix_Chunk* shop_sound = NULL;
 static Mix_Chunk* home_sound = NULL;
 static Mix_Chunk* click_sound = NULL;
 static Mix_Chunk* buy_sound = NULL;
+static Mix_Chunk* count_down_sound = NULL;
 
 
 static TTF_Font* g_font_text_1 = NULL; 

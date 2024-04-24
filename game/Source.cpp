@@ -16,8 +16,9 @@ bool Init(){
 	look_sound = Mix_LoadWAV("look_sound_new.wav");
 	shot_sound = Mix_LoadWAV("pistol-shot.wav");
 	walking_sound = Mix_LoadWAV("walking-on-floor.wav");
+	count_down_sound = Mix_LoadWAV("countdown.wav");
 
-	if (look_sound == NULL || shot_sound == NULL || walking_sound == NULL) 
+	if (look_sound == NULL || shot_sound == NULL || walking_sound == NULL || count_down_sound == NULL) 
 	return false;
 
 	//Khởi tạo text
@@ -49,7 +50,7 @@ int main(int arc, char*argv[]){
 	bool in_menu = true, through_menu = false;
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
-	int total_coins = 200;
+	int total_coins = 0;
 	int current_level = 4; 	int price_array[4] = {0, 20, 25, 30};
 
 	while(in_menu){
@@ -115,7 +116,7 @@ int main(int arc, char*argv[]){
 
 	MainObject human;
 	human.SetFullRect(0, 250, 120, 180);
-	human.SetSpeed(5);
+	human.SetSpeed(1);
 
 	std::string clothes_type;
 	int number_of_frames;
@@ -140,6 +141,7 @@ int main(int arc, char*argv[]){
 
 	int this_round_coins = 0;
 	double cloud_movement = 0;
+	bool already_play_countdown = false;
 
 
 	while (in_game){
@@ -186,6 +188,11 @@ int main(int arc, char*argv[]){
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
 		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+
+		if (check_time_remaining <= 4 && already_play_countdown == false){
+			Mix_PlayChannel(-1, count_down_sound, 0);
+			already_play_countdown = true;
+		}		
 		
 		bool win = false, lose = false; int used_time = 0; Uint32 time_die, time_die_check_1, time_die_check_2;
 
@@ -282,9 +289,10 @@ int main(int arc, char*argv[]){
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
 	Uint32 red_light_time = 5500;         //mili giây
-	Uint32 game_duration = 45;       //thời gian cho phép (giây)
+	Uint32 game_duration = 10;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 	double cloud_movement = 0;
+	bool already_play_countdown = false; 
 
 	const int numb_autoplayers = 15;
 	AutoPlayer auto_player[numb_autoplayers];
@@ -350,6 +358,10 @@ int main(int arc, char*argv[]){
 		//hiển thị Time Remaining
 		int check_time_remaining = game_duration-(time_value/1000-game_start_time/1000);
 		TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+		if (check_time_remaining <= 4 && already_play_countdown == false){
+			Mix_PlayChannel(-1, count_down_sound, 0);
+			already_play_countdown = true;
+		}	
 
 		UpdateGuardStatus(auto_player, numb_guards_alive, any_guard_win, check_time_remaining, green_light, numb_autoplayers, play_shot_sound);
 		if (play_shot_sound){
@@ -379,10 +391,23 @@ int main(int arc, char*argv[]){
 			}
 		}
 
-
-
-		win = true;
 		if (win){
+			int start_time = SDL_GetTicks();
+			while (SDL_GetTicks() - start_time <= 5000){
+				SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
+				CloudMovement(cloud_movement, g_cloud, g_screen);
+				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+				numb_guards_alive_text.CreateGameText(g_font_text_1, g_screen);
+				red_light_count_text.CreateGameText(g_font_text_1, g_screen);
+				ShowDoll(green_light, green_doll, red_doll, g_screen);
+				for (int i = 0; i < numb_autoplayers; i++){
+					if(auto_player[i].GetAliveOrNot() == true){
+						auto_player[i].Show(g_screen);
+						player_name[i].CreateGameText(g_font_text_7, g_screen);
+					}
+				}
+				SDL_Flip(g_screen);
+			}
 			Mix_HaltChannel(-1); // Dừng tất cả các kênh âm thanh đang phát
 			int show_win_last_stand_number = SDLCommonFunc::ShowWinLastStand(g_screen, g_font_text_4);
 

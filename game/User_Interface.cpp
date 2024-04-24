@@ -838,7 +838,7 @@ int SDLCommonFunc::ShowExploreLastStand(SDL_Surface* des, TTF_Font* font){
 }
 int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
 	double animation_speed = 0.25/32;
-	int picture_number = 11;
+	int picture_number = 24;
 	double picture_type = 1;
 	bool reverse_animation = false;
 	SDL_Surface *g_frame_1 = SDLCommonFunc::LoadImage("frame_1.png");
@@ -852,8 +852,25 @@ int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
 	SDL_Surface *g_frame_9 = SDLCommonFunc::LoadImage("frame_9.png");
 	SDL_Surface *g_frame_10 = SDLCommonFunc::LoadImage("frame_10.png");
 	SDL_Surface *g_frame_11 = SDLCommonFunc::LoadImage("frame_11.png");
+	SDL_Surface *g_frame_12 = SDLCommonFunc::LoadImage("frame_12.png");
+	SDL_Surface *g_frame_13 = SDLCommonFunc::LoadImage("frame_13.png");
+	SDL_Surface *g_frame_14 = SDLCommonFunc::LoadImage("frame_14.png");
+	SDL_Surface *g_frame_15 = SDLCommonFunc::LoadImage("frame_15.png");
+	SDL_Surface *g_frame_16 = SDLCommonFunc::LoadImage("frame_16.png");
+	SDL_Surface *g_frame_17 = SDLCommonFunc::LoadImage("frame_17.png");
+	SDL_Surface *g_frame_18 = SDLCommonFunc::LoadImage("frame_18.png");
+	SDL_Surface *g_frame_19 = SDLCommonFunc::LoadImage("frame_19.png");
+	SDL_Surface *g_frame_20 = SDLCommonFunc::LoadImage("frame_20.png");
+	SDL_Surface *g_frame_21 = SDLCommonFunc::LoadImage("frame_21.png");
+	SDL_Surface *g_frame_22 = SDLCommonFunc::LoadImage("frame_22.png");
+	SDL_Surface *g_frame_23 = SDLCommonFunc::LoadImage("frame_23.png");
+	SDL_Surface *g_frame_24 = SDLCommonFunc::LoadImage("frame_24.png");
+
 	if (g_frame_1 == NULL || g_frame_2 == NULL || g_frame_3 == NULL || g_frame_4 == NULL || g_frame_5 == NULL || g_frame_6 == NULL 
-		|| g_frame_7 == NULL || g_frame_8 == NULL || g_frame_9 == NULL || g_frame_10 == NULL || g_frame_11 == NULL)
+		|| g_frame_7 == NULL || g_frame_8 == NULL || g_frame_9 == NULL || g_frame_10 == NULL || g_frame_11 == NULL
+		|| g_frame_12 == NULL || g_frame_13 == NULL || g_frame_14 == NULL || g_frame_15 == NULL || g_frame_16 == NULL
+		|| g_frame_17 == NULL || g_frame_18 == NULL || g_frame_19 == NULL || g_frame_20 == NULL || g_frame_21 == NULL 
+		|| g_frame_22 == NULL || g_frame_23 == NULL || g_frame_24 == NULL)
 		return -1;
 
 	//Mix_Chunk* win_sound = NULL;
@@ -891,6 +908,19 @@ int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font){
 		case 9: SDLCommonFunc::ApplySurface(g_frame_9, des, 0, 0); break;
 		case 10: SDLCommonFunc::ApplySurface(g_frame_10, des, 0, 0); break;
 		case 11: SDLCommonFunc::ApplySurface(g_frame_11, des, 0, 0); break;
+		case 12: SDLCommonFunc::ApplySurface(g_frame_12, des, 0, 0); break;
+		case 13: SDLCommonFunc::ApplySurface(g_frame_13, des, 0, 0); break;
+		case 14: SDLCommonFunc::ApplySurface(g_frame_14, des, 0, 0); break;
+		case 15: SDLCommonFunc::ApplySurface(g_frame_15, des, 0, 0); break;
+		case 16: SDLCommonFunc::ApplySurface(g_frame_16, des, 0, 0); break;
+		case 17: SDLCommonFunc::ApplySurface(g_frame_17, des, 0, 0); break;
+		case 18: SDLCommonFunc::ApplySurface(g_frame_18, des, 0, 0); break;
+		case 19: SDLCommonFunc::ApplySurface(g_frame_19, des, 0, 0); break;
+		case 20: SDLCommonFunc::ApplySurface(g_frame_20, des, 0, 0); break;
+		case 21: SDLCommonFunc::ApplySurface(g_frame_21, des, 0, 0); break;
+		case 22: SDLCommonFunc::ApplySurface(g_frame_22, des, 0, 0); break;
+		case 23: SDLCommonFunc::ApplySurface(g_frame_23, des, 0, 0); break;
+		case 24: SDLCommonFunc::ApplySurface(g_frame_24, des, 0, 0); break;
 		default: return -1;
 		}
 	}

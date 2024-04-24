@@ -61,7 +61,7 @@ void HandleAutoPlayer(AutoPlayer auto_player[], Text player_name[], const int& n
 			player_name[i].SetRect(auto_player[i].GetRect().x, auto_player[i].GetRect().y - 20);
 			player_name[i].CreateGameText(font, des);
 			}
-		}
+	}
 }
 void CheckWinLose(int numb_guards_alive, int check_time_remaining, int game_duration, bool any_guard_win, bool& win, bool& lose) {
     if ((numb_guards_alive == 0 && check_time_remaining >= 0 && check_time_remaining <= game_duration) || (numb_guards_alive > 0 && check_time_remaining < 0))
