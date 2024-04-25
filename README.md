@@ -6,7 +6,7 @@ The game requires caution, careful calculation, and precise timing. I've enhance
 
 ## 0. The way to download the game
 
-Download the game (compressed into a .zip file) at the following link: 
+Download the game (compressed into a .zip file) at the following link: [LINK](https://github.com/Ducdung005bn/Red-or-green/releases/tag/releases)
 
 ## 1. Starting the game
 
