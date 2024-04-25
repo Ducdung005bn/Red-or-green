@@ -14,7 +14,6 @@ bool SDLCommonFunc::MouseCheck(int mouse_x, int mouse_y, SDL_Rect input);
 int SDLCommonFunc::ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font);
 int SDLCommonFunc::ShowExploreLastStand(SDL_Surface* des, TTF_Font* font);
 int SDLCommonFunc::ShowWinLastStand(SDL_Surface* des, TTF_Font* font);
-int SDLCommonFunc::ShowGameOfChance(SDL_Surface* des, TTF_Font* font);
 
 
 

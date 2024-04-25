@@ -45,6 +45,7 @@ static Mix_Chunk* home_sound = NULL;
 static Mix_Chunk* click_sound = NULL;
 static Mix_Chunk* buy_sound = NULL;
 static Mix_Chunk* count_down_sound = NULL;
+static Mix_Chunk* spinning_wheel_sound = NULL;
 
 
 static TTF_Font* g_font_text_1 = NULL; 
@@ -73,7 +74,7 @@ namespace SDLCommonFunc{
 	int ShowNeedToUpgrade(SDL_Surface* des, TTF_Font* font);
 	int ShowExploreLastStand(SDL_Surface* des, TTF_Font* font);
 	int ShowWinLastStand(SDL_Surface* des, TTF_Font* font);
-	int ShowGameOfChance(SDL_Surface* des, TTF_Font* font);
+	int ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF_Font* font);
 
 
 }

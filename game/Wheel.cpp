@@ -102,7 +102,7 @@ int calculateSelectedSector(double rotationAngle) {
     return sectorIndex;
 }
 
-int SDLCommonFunc::ShowGameOfChance(SDL_Surface* des, TTF_Font* font){
+int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF_Font* font){
 	
 	// Khai báo tâm của bức ảnh
 	int centerX = SCREEN_WIDTH / 2;
@@ -120,31 +120,55 @@ int SDLCommonFunc::ShowGameOfChance(SDL_Surface* des, TTF_Font* font){
 	if (wheel_picture == NULL || pointer_picture == NULL)
 		return -1;
 	
-	int ROTATION_SPEED = 2.5/2;
-	Uint32 DELAY_TIME = 50;
+	int ROTATION_SPEED = 1;
+	Uint32 DELAY_TIME = 10;
 
 	SDL_Event m_event;
+	bool press = false; Uint32 press_time;
 	bool stop_rotating = false;
+	int random_time;
+	srand(time(0));
+	random_time = rand() % 9000 + 1000;
 
-	Text check;
-	check.SetRect(0, 0);
-	check.SetColor(Text::RED_TEXT);
+	Text coins_text;
+	coins_text.SetRect(0, 0);
+	coins_text.SetColor(Text::YELLOW_TEXT);
+	coins_text.SetText("Coins: " + std::to_string(this_round_coins));
+
+	Text press_space;
+	press_space.SetRect(280, 0);
+	press_space.SetColor(Text::RED_TEXT);
+	press_space.SetText("Press the 'Space' button to stop the wheel.");
 
 	bool green = true;
 	int selected_sector;
 	int previous_selected_sector = calculateSelectedSector(0);
 
+	Mix_HaltChannel(-1);
+	spinning_wheel_sound= Mix_LoadWAV("spinning_wheel.wav");
+	if (spinning_wheel_sound == NULL) return -1;
+	int channel = Mix_PlayChannel(-1, spinning_wheel_sound, 0);
+
 
 	while (true) {
+		if (Mix_Playing(channel) == 0) 
+            Mix_PlayChannel(-1, spinning_wheel_sound, 0);
+
 		while (SDL_PollEvent(&m_event)){
 			switch(m_event.type){
 			case SDL_QUIT: return -1; 
-			case SDL_KEYDOWN: if (m_event.key.keysym.sym == SDLK_ESCAPE) stop_rotating = true; break;
+			case SDL_KEYDOWN: {
+				if (m_event.key.keysym.sym == SDLK_SPACE){
+					press = true;
+					press_time = SDL_GetTicks();
+				}
+				break;
+							  }
 			}
 		}
 
 		// Xóa màn hình
-		SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0)); // Màu trắng để xóa màn hình
+		SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0)); 
 		// Quay bức ảnh
 		SDL_Surface* rotatedImage = rotateSurface(wheel_picture, angle);
 		
@@ -155,15 +179,58 @@ int SDLCommonFunc::ShowGameOfChance(SDL_Surface* des, TTF_Font* font){
 		// Hiển thị bức ảnh quay trên màn hình
 		SDLCommonFunc::ApplySurface(rotatedImage, des, imageX, imageY);
 		SDLCommonFunc::ApplySurface(pointer_picture, des, 250, 280);
+		coins_text.CreateGameText(font, des);
+		press_space.CreateGameText(font, des);
 
 		selected_sector = calculateSelectedSector(angle);
-
 		if (selected_sector != previous_selected_sector)
 			green = !green;
 
-		if (green) check.SetText("GREEN");
-		else check.SetText("RED");
-		check.CreateGameText(font, des);
+		if (press && SDL_GetTicks() - press_time >= random_time)
+			stop_rotating = true;
+
+		if (stop_rotating){
+			Mix_HaltChannel(-1);
+			if (green){
+				int start_time = SDL_GetTicks();
+				Text win; 
+				win.SetColor(Text::RED_TEXT);
+				win.SetRect(0, 32);
+				win.SetText("The number of coins you've earned has increased from " + std::to_string(this_round_coins) + " to " + std::to_string(this_round_coins*2) + ".");
+				this_round_coins *= 2;
+				while(SDL_GetTicks() - start_time <= 5000){
+					SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0));
+					SDLCommonFunc::ApplySurface(rotatedImage, des, imageX, imageY);
+					SDLCommonFunc::ApplySurface(pointer_picture, des, 250, 280);
+					coins_text.SetText("Coins: " + std::to_string(this_round_coins));
+					coins_text.CreateGameText(font, des);
+					press_space.CreateGameText(font, des);
+					win.CreateGameText(font, des);
+					SDL_Flip(des);
+				}
+				return 0; 
+			}
+			else{
+				int start_time = SDL_GetTicks();
+				Text lose; 
+				lose.SetColor(Text::RED_TEXT);
+				lose.SetRect(0, 32);
+				lose.SetText("You have lost " + std::to_string(this_round_coins) + " coins.");
+				this_round_coins = 0;
+				while(SDL_GetTicks() - start_time <= 5000){
+					SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0));
+					SDLCommonFunc::ApplySurface(rotatedImage, des, imageX, imageY);
+					SDLCommonFunc::ApplySurface(pointer_picture, des, 250, 280);
+					coins_text.SetText("Coins: " + std::to_string(this_round_coins));
+					coins_text.CreateGameText(font, des);
+					press_space.CreateGameText(font, des);
+					lose.CreateGameText(font, des);
+					SDL_Flip(des);
+				}
+				return 0; 
+			}
+		}
+		
 
 		// Tăng góc quay
 		angle += ROTATION_SPEED;

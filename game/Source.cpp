@@ -217,6 +217,13 @@ int main(int arc, char*argv[]){
 		bool through_win = false;
 		while (win){
 			if (through_win == false){
+			SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
+			CloudMovement(cloud_movement , g_cloud, g_screen);
+			TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
+			ShowDoll(green_light, green_doll, red_doll, g_screen);
+			human.Show(g_screen);
+			ShowFollowersBasedOnLevel(current_level, guard_1, guard_2, g_screen);
+
 			SDL_Delay(500); 
 			int win_number = SDLCommonFunc::ShowWin(this_round_coins, used_time, g_screen, g_font_text_4);
 			switch(win_number){
@@ -231,7 +238,11 @@ int main(int arc, char*argv[]){
 			if (through_win == true){
 				while(in_game_of_chance){
 					//in_game_of_chance = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
-					SDLCommonFunc::ShowGameOfChance(g_screen, g_font_text_8);
+					int show_game_of_chance_number = SDLCommonFunc::ShowGameOfChance(this_round_coins, g_screen, g_font_text_4);
+					switch(show_game_of_chance_number){
+					case -1: return 0;
+					case 0: in_game_of_chance = false; win = true; through_win = false;
+					}
 
 				}//kết thúc while(in_game_of_chance)
 
@@ -240,7 +251,7 @@ int main(int arc, char*argv[]){
 
 		if (lose){
 			while (true){
-			time_die_check_1 = SDL_GetTicks();
+				time_die_check_1 = SDL_GetTicks();
 				SDLCommonFunc::ApplySurface(g_bkground, g_screen, 0, 0);
 				CloudMovement(cloud_movement , g_cloud, g_screen);
 				TimeRemaining(game_duration, check_time_remaining, g_screen, g_font_text_1);
