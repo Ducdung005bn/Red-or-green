@@ -88,6 +88,7 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="User_Interface.cpp" />
+    <ClCompile Include="Wheel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Baseobject.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="Mainobject.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="User_Interface.h" />
+    <ClInclude Include="Wheel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

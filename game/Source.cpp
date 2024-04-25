@@ -230,8 +230,8 @@ int main(int arc, char*argv[]){
 
 			if (through_win == true){
 				while(in_game_of_chance){
-					in_game_of_chance = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
-
+					//in_game_of_chance = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
+					SDLCommonFunc::ShowGameOfChance(g_screen, g_font_text_8);
 
 				}//kết thúc while(in_game_of_chance)
 

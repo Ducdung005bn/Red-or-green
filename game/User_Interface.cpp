@@ -1033,8 +1033,5 @@ while(true){
 	SDL_Flip(des);
 }
 }
-int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
-	return 0;
-}
 
 
