@@ -117,7 +117,10 @@ int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF
 	SDL_Surface* pointer_picture = NULL;
 	pointer_picture =  SDLCommonFunc::LoadImage("pointer.png");
 
-	if (wheel_picture == NULL || pointer_picture == NULL)
+	SDL_Surface* g_black_background = NULL;
+	g_black_background =  SDLCommonFunc::LoadImage("black_background.png");
+
+	if (wheel_picture == NULL || pointer_picture == NULL || g_black_background == NULL)
 		return -1;
 	
 	int ROTATION_SPEED = 1;
@@ -126,9 +129,9 @@ int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF
 	SDL_Event m_event;
 	bool press = false; Uint32 press_time;
 	bool stop_rotating = false;
-	int random_time;
 	srand(time(0));
-	random_time = rand() % 9000 + 1000;
+	int random_time;
+
 
 	Text coins_text;
 	coins_text.SetRect(0, 0);
@@ -161,6 +164,7 @@ int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF
 				if (m_event.key.keysym.sym == SDLK_SPACE){
 					press = true;
 					press_time = SDL_GetTicks();
+					random_time = (rand() % 9 + 1)*1000;
 				}
 				break;
 							  }
@@ -168,7 +172,7 @@ int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF
 		}
 
 		// Xóa màn hình
-		SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0)); 
+		SDLCommonFunc::ApplySurface(g_black_background, des, 0, 0);
 		// Quay bức ảnh
 		SDL_Surface* rotatedImage = rotateSurface(wheel_picture, angle);
 		
@@ -199,7 +203,7 @@ int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF
 				win.SetText("The number of coins you've earned has increased from " + std::to_string(this_round_coins) + " to " + std::to_string(this_round_coins*2) + ".");
 				this_round_coins *= 2;
 				while(SDL_GetTicks() - start_time <= 5000){
-					SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0));
+					SDLCommonFunc::ApplySurface(g_black_background, des, 0, 0);
 					SDLCommonFunc::ApplySurface(rotatedImage, des, imageX, imageY);
 					SDLCommonFunc::ApplySurface(pointer_picture, des, 250, 280);
 					coins_text.SetText("Coins: " + std::to_string(this_round_coins));
@@ -218,7 +222,7 @@ int SDLCommonFunc::ShowGameOfChance(int& this_round_coins, SDL_Surface* des, TTF
 				lose.SetText("You have lost " + std::to_string(this_round_coins) + " coins.");
 				this_round_coins = 0;
 				while(SDL_GetTicks() - start_time <= 5000){
-					SDL_FillRect(des, NULL, SDL_MapRGB(des->format, 0, 0, 0));
+					SDLCommonFunc::ApplySurface(g_black_background, des, 0, 0);
 					SDLCommonFunc::ApplySurface(rotatedImage, des, imageX, imageY);
 					SDLCommonFunc::ApplySurface(pointer_picture, des, 250, 280);
 					coins_text.SetText("Coins: " + std::to_string(this_round_coins));

@@ -416,6 +416,7 @@ int SDLCommonFunc::ShowDie(SDL_Surface* des, TTF_Font* font){
 	return -1;
 }
 int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* des, TTF_Font* font1, TTF_Font* font2){
+	Mix_HaltChannel(-1); // Dừng tất cả các kênh âm thanh đang phát
 	g_shop = LoadImage("shop.png");
 	if (g_shop == NULL) return -1;
 	const int shop_item_number = 9;
@@ -458,7 +459,7 @@ int SDLCommonFunc::ShowShop(int& current_level, int& total_coins, SDL_Surface* d
 	int mouse_x = 0, mouse_y = 0;
 	SDL_Event m_event;
 	int choose_to_buy = 0; //choose nothing
-	int price_array[4] = {0, 20, 25, 30};
+	int price_array[4] = {0, 25, 20, 15};
 
 	Text item_price[4];
 	for (int i = 0; i < 4; i++){

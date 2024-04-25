@@ -83,6 +83,7 @@
     <ClCompile Include="Baseobject.cpp" />
     <ClCompile Include="Follower.cpp" />
     <ClCompile Include="Common_Function.cpp" />
+    <ClCompile Include="Instructions.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Mainobject.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="Follower.h" />
     <ClInclude Include="Common_Function.h" />
     <ClInclude Include="AutoPlayer.h" />
+    <ClInclude Include="Instructions.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mainobject.h" />
     <ClInclude Include="Text.h" />

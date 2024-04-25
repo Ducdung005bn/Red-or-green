@@ -4,6 +4,7 @@
 #include "Text.h"
 #include "Follower.h"
 #include "AutoPlayer.h"
+#include "Instructions.h"
 
 bool Init(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
@@ -53,7 +54,7 @@ int main(int arc, char*argv[]){
 	bool in_home = false, in_shop = false, in_game = false, in_last_stand = false, in_instructions = false, through_home = false; //gán bằng gì không quan trọng
 	bool in_game_of_chance = false;
 	int total_coins = 0;
-	int current_level = 1; 	int price_array[4] = {0, 20, 25, 30};
+	int current_level = 1; 	int price_array[4] = {0, 25, 20, 15};
 
 	while(in_menu){
 		if (through_menu == false){
@@ -75,7 +76,7 @@ int main(int arc, char*argv[]){
 			case 0: through_home = false; in_home = false; in_menu = true; through_menu = false; break;
 			case 1: through_home = true; in_shop = true; break;
 			case 2: through_home = true; in_shop = false; in_instructions = false; in_game = true; break;
-			case 3: break;
+			case 3: through_home = true; in_shop = false; in_instructions = true; break;
 			case 4: through_home = true; in_shop = false; in_instructions = false; in_game = false; in_last_stand = true; break;
 			}//kết thúc switch
 			}//kết thúc if
@@ -90,7 +91,11 @@ int main(int arc, char*argv[]){
 				}//Kết thúc while(in_shop)
 
 				while(in_instructions){
-					//To do
+					int instructions_number = ShowInstructions(g_screen, g_font_text_4);
+					switch(instructions_number){
+					case -1: return 0;
+					case 0: in_instructions = false; in_game = false; in_last_stand = false; in_home = true; through_home = false; break;
+					}
 				}//Kết thúc while(in_instructions)
 
 				while(in_game){
@@ -118,7 +123,7 @@ int main(int arc, char*argv[]){
 
 	MainObject human;
 	human.SetFullRect(0, 250, 120, 180);
-	human.SetSpeed(10);
+	human.SetSpeed(1);
 
 	std::string clothes_type;
 	int number_of_frames;
@@ -128,9 +133,9 @@ int main(int arc, char*argv[]){
 	g_die = SDLCommonFunc::LoadImage(clothes_type + "_die.png"); if (g_die == NULL) return 0;
 	
 	Follower guard_1;
-	guard_1.SetFullRect(-69, SCREEN_HEIGHT, 69, 110);
+	guard_1.SetFullRect(-80, SCREEN_HEIGHT, 69, 110);
 	Follower guard_2;
-	guard_2.SetFullRect(-69, 200, 69, 110);
+	guard_2.SetFullRect(-140, 200, 69, 110);
 
 
 	
@@ -138,7 +143,7 @@ int main(int arc, char*argv[]){
 	Uint32 start_green = game_start_time, start_red = -1; 
 	Uint32 green_light_time;         //mili giây
 	double green_light_time_array[4] = {1.5, 1.75, 2.275, 2.85};
-	Uint32 game_duration = 10;       //thời gian cho phép (giây)
+	Uint32 game_duration = 45;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 
 	int this_round_coins = 0;
@@ -234,10 +239,8 @@ int main(int arc, char*argv[]){
 
 			}//kết thúc if (through_win == false)
 
-
 			if (through_win == true){
 				while(in_game_of_chance){
-					//in_game_of_chance = false; win = false; in_game = false; in_last_stand = false; in_home = false; in_menu = false; break;
 					int show_game_of_chance_number = SDLCommonFunc::ShowGameOfChance(this_round_coins, g_screen, g_font_text_4);
 					switch(show_game_of_chance_number){
 					case -1: return 0;
@@ -302,7 +305,7 @@ int main(int arc, char*argv[]){
 	bool green_light = true; 
 	Uint32 start_green = game_start_time, start_red = -1; 
 	Uint32 red_light_time = 5500;         //mili giây
-	Uint32 game_duration = 45;       //thời gian cho phép (giây)
+	Uint32 game_duration = 40;       //thời gian cho phép (giây)
 	bool handle_green_light = false; //đèn xanh đã được xử lí chưa?
 	double cloud_movement = 0;
 	bool already_play_countdown = false; 
