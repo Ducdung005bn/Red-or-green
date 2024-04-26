@@ -29,7 +29,7 @@ You can select options here (they will stand out if you move the mouse cursor to
 At the beginning, you have no coins and are at level 1. You need to earn coins and upgrade your level.
 
 ## 2. Upgrade your level
-### a. There are 4 levels.
+### a. There are 4 levels
 At levels 1, 2 and 3, the goal is to reach the finish line before time's up without getting eliminated.
 
 #### LEVEL 1
@@ -37,12 +37,16 @@ At levels 1, 2 and 3, the goal is to reach the finish line before time's up with
 + Please press the arrow keys on your keyboard to move. 
 + As the giant doll sings showing her back to you, the light will be green, meaning you are allowed to run towards the finish line. 
 + When she stops singing, the light will turn red, so you will have to stop running. If you are caught moving, you will be shot dead on the spot by a group of masked guards in pink jumpsuits. 
-+ Additionally, you are required to cross the finish line within a time limit. If time's up and you haven't reached the finish line, you'll still get shot. Therefore, pay attention to the "Time Remaining" written at the top of the screen. 
++ Additionally, you are required to cross the finish line within a time limit. If time's up and you haven't reached the finish line, you'll still get shot. Therefore, pay attention to the "Time Remaining" written at the top of the screen.
 + If you reach the finish line before time's up without getting eliminated, the sooner you reach the finish line, the more coins you are given.
 
 #### LEVEL 2
 + The primary logic of level 2 is basically the same as that of level 1.
 + Additionally, there is one character called "Follower". Its duty is to follow you (it can move only when the light is green). Watch out for the follower, because you'll also be shot if at the same position as it.
+
+![](https://github.com/Ducdung005bn/Picture/blob/main/Screenshot%202024-04-26%20182557.png?raw=true) 
+
+The follower is chasing the player.
 
 #### LEVEL 3
 + The only difference between level 2 and level 3 is that there will be two followers instead of one.
@@ -53,6 +57,42 @@ At levels 1, 2 and 3, the goal is to reach the finish line before time's up with
 + There are 15 automated players. They will try to reach the finish line without being caught moving. Of cource, they don't know when the light will turn red.
 + You're required to choose when to turn the red light (please press the space key). You just have only 3 times to turn it.
 + If any automated players reach the finish line before time's up without getting eliminated, you will lose. On the contrary, you will win.
+
+![](https://github.com/Ducdung005bn/Picture/blob/main/Screenshot%202024-04-26%20183206.png?raw=true)
+
+### b. Enter the shop to upgrade your level
+|Clothes|Price|Level|
+| --- | --- | --- |
+|![](https://github.com/Ducdung005bn/Picture/blob/main/New%20folder/man.png?raw=true) | FREE | 1 |
+|![](https://github.com/Ducdung005bn/Picture/blob/main/New%20folder/worker.png?raw=true)| 25 coins | 2 |
+|![](https://github.com/Ducdung005bn/Picture/blob/main/New%20folder/businessman.png?raw=true) | 20 coins | 3 |
+|![](https://github.com/Ducdung005bn/Picture/blob/main/New%20folder/doll.png?raw=true) | 15 coins | 4 |
+
+At the beginning, you are at level 1. Earn coins to upgrade your level. 
++ The clothes that you have bought are marked with 'O'.
++ You have to upgrade your level  in sequence.
++ When you have enough money to upgrade to the next level, you are required to upgrade before continuing to play. 
+
+![](https://github.com/Ducdung005bn/Picture/blob/main/Screenshot%202024-04-26%20183811.png?raw=true)
+
+## 3. Earn more coins with the game of chance - SPIN THE WHEEL
+After winning at levels 1, 2, or 3, on the screen appears:
+  
+  ![](https://github.com/Ducdung005bn/Picture/blob/main/New%20folder/Screenshot%202024-04-26%20190210.png?raw=true)
+
+If you've earned more than one coin in this round, you can decide whether to participate in the game of chance or not.
+  + If you don't want to participate, select "Return" to move to the main menu.
+  + If you don't know the rules of the game, move the mouse cursor to "How?"
+  + If you want to participate, just select "Yes"
+
+![](https://github.com/Ducdung005bn/Picture/blob/main/SDL_app%202024-04-26%2020-15-41%20(1).gif)
+
+To stop the wheel, press the space key on your keyboard. The needle will then randomly point to either "Green" or "Red".
+
+If the needle points to "Green", your coins will double. You can also use 
+  
+
+
 
 
 
