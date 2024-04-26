@@ -80,7 +80,7 @@ After winning at levels 1, 2, or 3, on the screen appears:
   
   ![](https://github.com/Ducdung005bn/Picture/blob/main/New%20folder/Screenshot%202024-04-26%20190210.png?raw=true)
 
-If you've earned more than one coin in this round, you can decide whether to participate in the game of chance or not.
+If you've earned at least one coin in this round, you can decide whether to participate in the game of chance or not.
   + If you don't want to participate, select "Return" to move to the main menu.
   + If you don't know the rules of the game, move the mouse cursor to "How?"
   + If you want to participate, just select "Yes"
@@ -89,7 +89,30 @@ If you've earned more than one coin in this round, you can decide whether to par
 
 To stop the wheel, press the space key on your keyboard. The needle will then randomly point to either "Green" or "Red".
 
-If the needle points to "Green", your coins will double. You can also use 
+If the needle points to "Green", your coins will double. You can also use these coins to play the game of chance again.
+
+On the contrary, your coins in this round will be lost.
+
+## 4. Prize
+Start at level 1, earn more coins to upgrade to the next level. If you win the last stand, you are recognized to crack this game. The piggy bank will then be filled with a lot of money.
+
+![](https://github.com/Ducdung005bn/Picture/blob/main/Screenshot%202024-04-26%20212842.png?raw=true)
+
+## 5. The game's source code
++ Source.cpp: main function of the game.
++ Common_Function.cpp: including functions that are used commonly in this project.
++ BaseObject.cpp: related to the BaseObject class, which is inherited by some objects.
++ Text.cpp: including functions used to show text on the screen.
++ MainObject.cpp: related to the MainObject class, handling player's movement, ...
++ Follower.cpp: related to the Follower class, handling how followers move, checking collision with human, ...
++ AutoPlayer.cpp: related to the AutoPlayer class, handling how automated players move, updating automated players' status, ...
++ Instructions.cpp: handing the display of instructions on the screen.
++ Light.cpp: including functions related to red light, green light, the display of "Time Remaining", ...
++ User_Interface.cpp: handling the display of main menu, shop, ...
++ Wheel.cpp: showing and handling the game of chance - spin the wheel.
+
+
+
   
 
 
